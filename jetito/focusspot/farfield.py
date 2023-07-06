@@ -296,7 +296,97 @@ class farfield_calculator:
         
         
         
+class farfield_theory:
+    """Class to calculate the theoretical far-field parameters (w0, FWHM, Rayleigh length) from experimental parameters using Gaussian beam optics.
+       A sequence of commands in the correct order is required to fully compute the theoretical far-field parameters of a beam
+       Please see the scrip test_farfield_theory.py in the tests folder to have an example of how to work with this class.
+       
+       Refs.: 
+       * 
+       * https://www.newport.com/n/gaussian-beam-optics
+    """
     
+    def __init__(self, beam_diameter=12.5, focal_length=2.5, wavelength=800e-9):
+        """_summary_
+
+        Args:
+            beam_diameter (float, optional): Collimated beam diameter in cm. Defaults to 12.5.
+            focal_length (float, optional): Focal length of the focus optics (lens, parabolic mirror, spherical mirror, etc) given in meters. Defaults to 2.5.
+            wavelength (_type_, optional): Wavelength of the light beam in meters. Defaults to 800e-9.
+        """
+        
+        self.beam_diameter = beam_diameter * 1e-2 # Converts the beam diameter in meters
+        self.focal_length = focal_length
+        self.wavelength = wavelength
+        
+        
+    ## Getter and setters for the three required parameters.
+    # Everytime a get property is called, the compute focus method is executed
+    
+    def set_beam_diameter(self, diameter):
+        """Sets the beam diameter and compute the theoretical focus spot paramters.
+
+        Args:
+            beamdia (float): Collimated beam diameter in cm.
+        """
+        #print('setname() called')
+        self.beam_diameter = diameter * 1e-2
+        self.compute_focus_parameters()
+    
+    diameter = property(fset=set_beam_diameter)
+    
+    
+    def set_focal_length(self, f_length):
+        """Sets the focal length of the focus optics (lens, parabolic mirror, spherical mirror, etc) given in meters.
+
+        Args:
+            f_length (float): focal length in m.
+        """
+        #print('setname() called')
+        self.focal_length = f_length
+        self.compute_focus_parameters()
+    
+    f_length = property(fset=set_focal_length)
+    
+    def set_wavelength(self, wavelength_light):
+        """Sets the wavelength of the light beam in meters.
+
+        Args:
+            wavelength_light (float): wavelength of the light beam in nm.
+        """
+        #print('setname() called')
+        self.wavelength = wavelength_light
+        self.compute_focus_parameters()
+    
+    wavelength_light = property(fset=set_wavelength)
+    
+    
+    ####
+    # Compute method            
+    
+    def compute_focus_parameters(self):
+        
+        try:
+            self.f_number = self.focal_length / self.beam_diameter
+            print("F-number = %.1f"%self.f_number)
+            
+            self.w0 = 2 * self.f_number * self.wavelength / np.pi
+            print("w0 = %.2f um"%(self.w0*1e6))
+            
+            self.rayleigh_length = np.pi * self.w0**2 / self.wavelength
+            print("Rayleigh length Zr = %.2f um"%(self.rayleigh_length * 1e6))
+            
+            self.FWHM = 1.17 * self.w0
+            print("Focus spot FWHM = %.2f um"%(self.FWHM * 1e6))
+
+            return self.f_number, self.w0, self.rayleigh_length, self.FWHM
+        
+        except:
+            print("Error while calculating the parameters!")
+            return -1
+        
+            
+        
     
         
         

@@ -35,15 +35,16 @@ def fit2d(XX, YY, ZZ, initial_guess, output=False):
     popt, pcov = curve_fit(twoD_Gaussian, (XX, YY), ZZ.ravel(), p0=initial_guess)
     #print("amplitude, xo, yo, sigma_x, sigma_y, theta, offset")
     #print(popt)
-    print("pcov")
-    print(pcov)
-    print("")
     #data_fitted = twoD_Gaussian((freq_X_crop, freq_Y_crop), *popt)
     #
     if output == True:
+        print("pcov")
+        print(pcov)
+        print("")
         print("Amplitude = %.3f"%popt[0])
         print("x0 = %.3f"%popt[1])
         print("y0 = %.3f"%popt[2])
+        print("")
         
         print("Sigma_x = %.3f"%popt[3])
         print("2 x Sigma_x = %.3f"%(2*popt[3]))
