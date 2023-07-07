@@ -35,8 +35,7 @@ class focusspot_analysis:
     """
     
     def __init__(self, filename, image_calib=0.4):
-        
-        """Contructor of the farfield_calculator class.
+        """Contructor of the focusspot_analysis class.
 
         Args:
             filename (string): Path and file name of the near-field image to calculate the far-field distribution.
@@ -48,7 +47,7 @@ class focusspot_analysis:
         
         try:
             self.image_focus = cv2.imread(self.file, cv2.IMREAD_GRAYSCALE)
-            #cv2.imwrite("test.png", self.image_focus)
+            
             print("Image file loaded successfully!")
             print(self.image_focus.shape)
         except:
@@ -136,9 +135,9 @@ class focusspot_analysis:
             sum_horizontal = np.sum(self.image_crop, axis=1)
             idx_max_horizontal = np.argmax(sum_horizontal)
             
-            plt.pcolormesh(self.XX, self.YY, self.image_crop)
-            plt.colorbar()
-            plt.savefig("results/focus_analysis/cropped.png", forecolor="white")
+            #plt.pcolormesh(self.XX, self.YY, self.image_crop)
+            #plt.colorbar()
+            #plt.savefig("results/focus_analysis/cropped.png", forecolor="white")
             
             if verbose:
                 print("Maximum at: x = %.3f um and y = %.3f um"%(self.XX[idx_max_horizontal, idx_max_vertical],
