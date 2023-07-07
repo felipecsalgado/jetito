@@ -73,6 +73,34 @@ class pointing_analysis:
             import scipy.ndimage
             ret = scipy.ndimage.morphology.grey_opening(ret, size=(3,3))
         return np.float64(ret)
+    
+    def RemoveMeanBackground(self, left=660, right=700, top=790, bottom=820, **kwargs):
+        """
+        Removes the background from the image assuming that it is uniform.
+        It takes the mean of a portion of the screen and subtracts it from the original image. Negative values arethen truncated to zero.
+
+        Args:
+            left (int, optional): Pixel position for starting cropping the image from the left. Defaults to 660.
+            right (int, optional): Pixel position for starting cropping the image from the right. Defaults to 700.
+            top (int, optional): Pixel position for starting cropping the image from the top. Defaults to 790.
+            bottom (int, optional): Pixel position for starting cropping the image from the bottom. Defaults to 820.
+        """
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+        
+        image_crop_bkg = self.image_pointing[top:bottom, left:right]
+        mean_bkg = np.mean(image_crop_bkg)
+        self.image_pointing = self.image_pointing - mean_bkg
+        
+        # truncate to zero
+        self.image_pointing[self.image_pointing < 0] = 0
+        
+        if verbose:
+            print("")
+            print("Mean background = %.1f counts"%mean_bkg)
             
     def crop_image(self, left=100, right=1260, top=795, bottom=1970, save_file=None, **kwargs):
         """Crops the original pointing image to an smaller part for later to perform the
