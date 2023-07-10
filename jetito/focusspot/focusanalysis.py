@@ -113,7 +113,7 @@ class focusspot_analysis:
 
         # Manage *kwargs
         if 'output' not in kwargs:
-                kwargs['output'] = False
+            kwargs['output'] = False
 
         if 'verbose' not in kwargs:
             verbose = False
@@ -214,7 +214,7 @@ class focusspot_analysis:
 
         # Manage *kwargs
         if 'cmap' not in kwargs:
-                kwargs['cmap'] = 'coolwarm'
+            kwargs['cmap'] = 'coolwarm'
 
         fig, axes1 = plt.subplots(1, 1, figsize=(6, 4))
 
@@ -233,22 +233,22 @@ class focusspot_analysis:
                    data_fitted.reshape(self.image_crop.shape[0], self.image_crop.shape[1]),
                    levels=[Z_FWHM], colors=['black'])
 
-        text_legend = ("$\sigma_x$ = %.1f \u03BCm\n" +
-                       "$2\sigma_x$ = %.1f \u03BCm\n" +
-                       "FWHM$_x$ = %.1f \u03BCm\n") % (self.popt_fit[3],
-                                                       2*self.popt_fit[3],
-                                                       2.35*self.popt_fit[3])
+        text_legend = (r"$\sigma_x$ = %.1f \u03BCm\n" +
+                       r"$2\sigma_x$ = %.1f \u03BCm\n" +
+                       r"FWHM$_x$ = %.1f \u03BCm\n") % (self.popt_fit[3],
+                                                        2*self.popt_fit[3],
+                                                        2.35*self.popt_fit[3])
         _ = ax.text(0.07, 0.125, text_legend, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center',
                     transform=ax.transAxes)
 
-        text_legend2 = ("$\sigma_y$ = %.1f \u03BCm\n" +
-                        "$2\sigma_y$ = %.1f \u03BCm\n" +
-                        "FWHM$_y$ = %.1f \u03BCm\n" +
-                        "q-factor = %.1f %%") % (self.popt_fit[4],
-                                                 2*self.popt_fit[4],
-                                                 2.35*self.popt_fit[4],
-                                                 self.q_factor)
+        text_legend2 = (r"$\sigma_y$ = %.1f \u03BCm\n" +
+                        r"$2\sigma_y$ = %.1f \u03BCm\n" +
+                        r"FWHM$_y$ = %.1f \u03BCm\n" +
+                        r"q-factor = %.1f %%") % (self.popt_fit[4],
+                                                  2*self.popt_fit[4],
+                                                  2.35*self.popt_fit[4],
+                                                  self.q_factor)
         _ = ax.text(0.55, 0.125, text_legend2, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center', transform=ax.transAxes)
 
@@ -258,7 +258,7 @@ class focusspot_analysis:
             ax.set_ylim(ylim)
 
         if clim:
-                im.set_clim(clim)
+            im.set_clim(clim)
 
         ax.set_xlabel('\u03BCm')
         ax.set_ylabel('\u03BCm')

@@ -7,25 +7,195 @@ Processing /raid/home/fsalgado/Projects/Jetito
   Installing backend dependencies: finished with status 'done'
     Preparing wheel metadata: started
     Preparing wheel metadata: finished with status 'done'
-Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (3.0.3)
 Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.4.1)
+Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (3.0.3)
 Requirement already satisfied: numpy>=1.18.5 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.18.5)
-Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.7.5)
 Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.3.0)
 Requirement already satisfied: cycler>=0.10 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (0.10.0)
+Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.7.5)
 Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (1.0.1)
 Requirement already satisfied: six in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from cycler>=0.10->matplotlib>=3.0.3->jetito==0.3.0) (1.11.0)
 Requirement already satisfied: setuptools in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from kiwisolver>=1.0.1->matplotlib>=3.0.3->jetito==0.3.0) (40.6.2)
 Building wheels for collected packages: jetito
   Building wheel for jetito (PEP 517): started
   Building wheel for jetito (PEP 517): finished with status 'done'
-  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23350 sha256=6a089698c91f31f593eb5ad02e4e64a3e3af57ecc43721885be94bc90aa88d80
-  Stored in directory: /tmp/pip-ephem-wheel-cache-rhm43pel/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
+  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23579 sha256=643dec66c7cf0dc9470de4442aae15094cc2e99f281875c73a4511711d220743
+  Stored in directory: /tmp/pip-ephem-wheel-cache-kcekamiq/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
 Successfully built jetito
 Installing collected packages: jetito
 Successfully installed jetito-0.3.0
-2.3.1
+2.8.0
 /raid/home/fsalgado/Projects/Jetito
+(1240, 1640)
+Image file loaded successfully!
+
+Calculating 2D Fourier Transform....
+delta_fx = 5.218e+00 
+delta_fy = 5.218e+00 
+2D Fourier Transform calculated successfully!
+
+2D Gaussian fit in the FF distribution starting....
+pcov
+[[ 1.90172524e-09 -2.55882994e-12 -4.44029660e-11 -4.51940047e-09
+  -5.05971775e-09  4.78028280e-13  1.80982027e-17]
+ [-2.55882994e-12  4.29514399e-08  4.17642250e-10  5.82280465e-11
+   2.52281319e-11 -1.66377756e-11 -3.09838817e-16]
+ [-4.44029660e-11  4.17642250e-10  5.32049503e-08 -1.66479503e-10
+   9.59572748e-10 -5.71839054e-10 -1.11828524e-15]
+ [-4.51940047e-09  5.82280465e-11 -1.66479503e-10  4.29674942e-08
+  -1.56106421e-13  1.78701401e-12 -2.65168876e-13]
+ [-5.05971775e-09  2.52281319e-11  9.59572748e-10 -1.56106421e-13
+   5.38518655e-08 -1.03240318e-11 -2.96834014e-13]
+ [ 4.78028280e-13 -1.66377756e-11 -5.71839054e-10  1.78701401e-12
+  -1.03240318e-11  7.31599099e-08  1.03133692e-17]
+ [ 1.80982030e-17 -3.09838817e-16 -1.11828524e-15 -2.65168876e-13
+  -2.96834014e-13  1.03133692e-17  2.78935481e-14]]
+
+Amplitude = 1.009
+x0 = 0.000
+y0 = 0.000
+
+Sigma_x = 4.796
+2 x Sigma_x = 9.593
+FWHM_x = 11.271
+
+Sigma_y = 5.369
+2 x Sigma_y = 10.738
+FWHM_y = 12.617
+2D Gaussian fit completed!
+
+q-factor = 48.4 %
+/raid/home/fsalgado/Projects/Jetito
+F-number = 20.8
+w0 = 10.61 um
+Rayleigh length Zr = 442.10 um
+Focus spot FWHM = 12.41 um
+
+F-number = 25.0
+w0 = 12.73 um
+Rayleigh length Zr = 636.62 um
+Focus spot FWHM = 14.90 um
+
+F-number = 25.0
+w0 = 11.94 um
+Rayleigh length Zr = 596.83 um
+Focus spot FWHM = 13.97 um
+
+F-number = 50.0
+w0 = 23.87 um
+Rayleigh length Zr = 2387.32 um
+Focus spot FWHM = 27.93 um
+
+Emittance experiment
+F-number = 16.7
+w0 = 8.49 um
+Rayleigh length Zr = 282.94 um
+Focus spot FWHM = 9.93 um
+
+TA2
+F-number = 1.5
+w0 = 0.76 um
+Rayleigh length Zr = 2.29 um
+Focus spot FWHM = 0.89 um
+/raid/home/fsalgado/Projects/Jetito/jetito/examples/Images/TA1_ElecAcc2023/focus/157_Fz=-6mm_600mJ_680_ND10ND10ND10ND03Laser+ND40Target191320_.png
+Image file loaded successfully!
+(1200, 1600)
+
+Crop the image
+Shape of the cropped image: 250 x 400
+Saved cropped image at: /raid/home/fsalgado/Projects/Jetito/jetito/examples/results/focus_analysis/focus_cropped.png
+
+q-factor = 35.0 %
+Image file loaded successfully!
+2048
+
+Crop the image
+Shape of the cropped image: 620 x 960
+Saved cropped image at: /raid/home/fsalgado/Projects/Jetito/jetito/examples/results/ebeam/pointing/ebeam_pointing_cropped.png
+pcov
+[[ 3.16741414e-02 -6.80555796e-06 -8.54659264e-06 -6.75835758e-05
+  -1.25347522e-04  1.12287037e-05 -3.36927052e-03]
+ [-6.80555796e-06  2.49826155e-06  1.01692847e-06 -4.42585890e-08
+   2.60701188e-08 -1.72519484e-08  5.50569543e-06]
+ [-8.54659264e-06  1.01692847e-06  2.08014384e-06 -8.61208435e-10
+   5.90515354e-08 -5.00836637e-08  4.44370481e-06]
+ [-6.75835758e-05 -4.42585890e-08 -8.61208435e-10  2.26667500e-06
+   1.45814461e-06  2.73453289e-08 -9.02688756e-05]
+ [-1.25347522e-04  2.60701188e-08  5.90515354e-08  1.45814461e-06
+   5.65611376e-06  6.95597146e-09 -1.29509949e-04]
+ [ 1.12287037e-05 -1.72519484e-08 -5.00836637e-08  2.73453289e-08
+   6.95597146e-09  5.30715703e-07 -8.51548003e-06]
+ [-3.36927052e-03  5.50569543e-06  4.44370481e-06 -9.02688756e-05
+  -1.29509949e-04 -8.51548003e-06  8.56729917e-03]]
+
+Amplitude = 361.096
+x0 = 1.237
+y0 = 0.474
+
+Sigma_x = 2.340
+2 x Sigma_x = 4.680
+FWHM_x = 5.499
+
+Sigma_y = 3.778
+2 x Sigma_y = 7.555
+FWHM_y = 8.877
+
+Divergence of the ebeam
+RMS Divergence sigma_x = 1.614 mrad
+RMS Divergence sigma_y = 2.605 mrad
+Half-angle divergence FWHM_x = 1.896 mrad
+Half-angle divergence FWHM_y = 3.061 mrad
+
+Calculating charge....
+Solid angle = 1.40e-02 sr
+Charge calibration = 3.784e-08 photons/count
+Sum of counts of the ROI image = 159073840
+Total charge of the beam = 6.019 pC
+Image file loaded successfully!
+1750
+
+Crop the image
+Shape of the cropped image: 385 x 470
+Saved cropped image at: /raid/home/fsalgado/Projects/Jetito/jetito/examples/results/ebeam/pointing/ebeam_pointing_cropped_jeti.png
+pcov
+[[ 7.63975060e-01 -1.46281385e-12  2.02756149e-11 -4.15933329e-04
+  -4.30174833e-04  1.74328408e-04 -8.78232193e-07]
+ [-1.46281385e-12  8.79788085e-07 -8.06648755e-09  3.03936796e-15
+   6.37169397e-16 -1.22741298e-14  3.02151373e-15]
+ [ 2.02756149e-11 -8.06648755e-09  9.98548385e-07  8.41220266e-16
+  -2.40954840e-14 -2.97123727e-14 -7.00804885e-16]
+ [-4.15933329e-04  3.03936796e-15  8.41220266e-16  1.09134129e-06
+  -2.17303074e-07 -5.85514982e-06 -1.92129258e-06]
+ [-4.30174833e-04  6.37169397e-16 -2.40954840e-14 -2.17303074e-07
+   1.24039140e-06  6.24526497e-06 -2.11090937e-06]
+ [ 1.74328408e-04 -1.22741298e-14 -2.97123727e-14 -5.85514982e-06
+   6.24526497e-06  1.64890375e-04 -8.29968255e-07]
+ [-8.78232193e-07  3.02151373e-15 -7.00804885e-16 -1.92129258e-06
+  -2.11090937e-06 -8.29968255e-07  9.09095845e-04]]
+
+Amplitude = 973.514
+x0 = 0.148
+y0 = -3.464
+
+Sigma_x = 1.038
+2 x Sigma_x = 2.077
+FWHM_x = 2.440
+
+Sigma_y = 1.113
+2 x Sigma_y = 2.227
+FWHM_y = 2.616
+
+Divergence of the ebeam
+RMS Divergence sigma_x = 0.555 mrad
+RMS Divergence sigma_y = 0.595 mrad
+Half-angle divergence FWHM_x = 0.652 mrad
+Half-angle divergence FWHM_y = 0.700 mrad
+
+Calculating charge....
+Solid angle = 1.92e-04 sr
+Charge calibration = 4.235e-06 photons/count
+Sum of counts of the ROI image = 2691390
+Total charge of the beam = 11.399 pC
 =====  running next command =====
 $ python3 -m pip install --user .
 OK
@@ -37,6 +207,16 @@ $ python3 -m pycodestyle jetito --statistics --count --show-source --ignore=W391
 OK
 =====  running next command =====
 $ python3 jetito/examples/test_farfield.py
-run-tests.py failed. aborting.
-The failing command was:
-python3 jetito/examples/test_farfield.py
+OK
+=====  running next command =====
+$ python3 jetito/examples/test_farfield_theory.py
+OK
+=====  running next command =====
+$ python3 jetito/examples/test_focuspot_analysis.py
+OK
+=====  running next command =====
+$ python3 jetito/examples/ebeam_pointing_emittance.py
+OK
+=====  running next command =====
+$ python3 jetito/examples/ebeam_pointing_jeti.py
+OK

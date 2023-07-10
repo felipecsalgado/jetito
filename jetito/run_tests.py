@@ -45,17 +45,17 @@ def runcmd(cmd):
 
 
 def run_autopep8(args):
-        import autopep8
-        if autopep8.__version__ < '1.2':
-            print('upgrade to autopep8 >= 1.2 (installed: {:})'.format(str(autopep8.__version__)))
-            exit(1)
-        autopep8mode = '--in-place' if args.autopep8 == 'fix' else '--diff'
-        argv = ['autopep8', '-r', 'jetito', '--ignore-local-config', autopep8mode,
-                '--ignore=W391,E123,E226,E24', '--max-line-length=99']
-        print('===== running autopep8 =====')
-        print('autopep8 version: ' + autopep8.__version__)
-        print('$ ' + ' '.join(argv))
-        autopep8.main(argv)
+    import autopep8
+    if autopep8.__version__ < '1.2':
+        print('upgrade to autopep8 >= 1.2 (installed: {:})'.format(str(autopep8.__version__)))
+        exit(1)
+    autopep8mode = '--in-place' if args.autopep8 == 'fix' else '--diff'
+    argv = ['autopep8', '-r', 'jetito', '--ignore-local-config', autopep8mode,
+            '--ignore=W391,E123,E226,E24', '--max-line-length=99']
+    print('===== running autopep8 =====')
+    print('autopep8 version: ' + autopep8.__version__)
+    print('$ ' + ' '.join(argv))
+    autopep8.main(argv)
 
 
 def run_alltests(python='python', fast=False, skip_setup=False):
@@ -86,12 +86,11 @@ def run_alltests(python='python', fast=False, skip_setup=False):
             '{python} -m {pycodestyle} jetito --statistics --count --show-source '
             '--ignore=W391,E123,E226,E24,W504 --max-line-length=99']
     # '{python} -m nose --exe']
-    cmdo = []
-    # '{python} ' + os.path.join('jetito/examples', 'test_farfield.py'),
-    # '{python} ' + os.path.join('examples', 'test_farfield_theory.py'),
-    # '{python} ' + os.path.join('examples', 'test_focuspot_analysis.py'),
-    # '{python} ' + os.path.join('examples', 'ebeam_pointing_emittance.py'),
-    # '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py')]
+    cmdo = ['{python} ' + os.path.join('jetito/examples', 'test_farfield.py'),
+            '{python} ' + os.path.join('jetito/examples', 'test_farfield_theory.py'),
+            '{python} ' + os.path.join('jetito/examples', 'test_focuspot_analysis.py'),
+            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_emittance.py'),
+            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py')]
     if not fast:
         cmds += cmdo
     for cmd in cmds:

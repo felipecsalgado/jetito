@@ -5,8 +5,8 @@ import natsort
 import numpy as np
 
 # Get the files from the focus experimental results folder
-
-folder = 'Images/TA1_ElecAcc2023/focus/'
+basepath = os.path.abspath(os.path.dirname(__file__)) + "/"
+folder = basepath + 'Images/TA1_ElecAcc2023/focus/'
 # list of images
 files_list = glob.glob(folder + "*-6mm*.png")
 files_list = natsort.natsorted(files_list, reverse=False)
@@ -34,7 +34,8 @@ for idx in range(0, len(files_list)):
     q_factor_percentage.append(FA.q_factor)
 
     # Save the analysis
-    filename = "results/focus_analysis/shot_series/focus_analysis_" + str(int(idx)) + ".png"
+    filename = basepath + "results/focus_analysis/shot_series/focus_analysis_" + \
+        str(int(idx)) + ".png"
     FA.plot_fields_fit(save_file=filename,
                        xlim=(-40, 60), ylim=(-50, 50), clim=(0, 150),
                        cmap='coolwarm')
