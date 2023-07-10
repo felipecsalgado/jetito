@@ -9,7 +9,7 @@ Test file showing the basic commands to calculate the far-field
 of a laser beam using a near-field image.
 """
 basepath = os.path.abspath(os.path.dirname(__file__)) + "/"
-file = basepath + "Images/JETi-200/JETi200_near_field.png"
+file = basepath + "images/JETi-200/JETi200_near_field.png"
 
 FF = farfield.farfield_calculator(file, image_calib=0.147e-3)
 

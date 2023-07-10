@@ -2,7 +2,7 @@ from jetito.ebeam import pointing
 import os
 
 basepath = os.path.abspath(os.path.dirname(__file__)) + "/"
-file = basepath + "Images/JETi-200/ebeam_pointing/" + \
+file = basepath + "images/JETi-200/ebeam_pointing/" + \
     "386_LWFA_Zelle_He5N2_Pointing_ESpeklow_182542_.png"
 ebeam_anaylsis = pointing.pointing_analysis(file, rescale=True,
                                             image_calib=5/54,

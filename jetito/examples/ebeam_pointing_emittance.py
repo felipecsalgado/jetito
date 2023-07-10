@@ -2,7 +2,7 @@ import os
 from jetito.ebeam import pointing
 
 basepath = os.path.abspath(os.path.dirname(__file__)) + "/"
-file = basepath + "Images/Emittance_Experiment_2022/ebeam_pointing/" + \
+file = basepath + "images/Emittance_Experiment_2022/ebeam_pointing/" + \
     "shot00450.tif"
 ebeam_anaylsis = pointing.pointing_analysis(file, image_calib=18.5e-3)
 

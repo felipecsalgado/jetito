@@ -7,20 +7,20 @@ Processing /raid/home/fsalgado/Projects/Jetito
   Installing backend dependencies: finished with status 'done'
     Preparing wheel metadata: started
     Preparing wheel metadata: finished with status 'done'
-Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.4.1)
 Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (3.0.3)
 Requirement already satisfied: numpy>=1.18.5 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.18.5)
-Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.3.0)
+Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.4.1)
+Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (1.0.1)
 Requirement already satisfied: cycler>=0.10 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (0.10.0)
 Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.7.5)
-Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (1.0.1)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.3.0)
 Requirement already satisfied: six in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from cycler>=0.10->matplotlib>=3.0.3->jetito==0.3.0) (1.11.0)
 Requirement already satisfied: setuptools in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from kiwisolver>=1.0.1->matplotlib>=3.0.3->jetito==0.3.0) (40.6.2)
 Building wheels for collected packages: jetito
   Building wheel for jetito (PEP 517): started
   Building wheel for jetito (PEP 517): finished with status 'done'
-  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23579 sha256=643dec66c7cf0dc9470de4442aae15094cc2e99f281875c73a4511711d220743
-  Stored in directory: /tmp/pip-ephem-wheel-cache-kcekamiq/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
+  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23569 sha256=f44b659162c6e3a3769dcfef03f4ba15241aebf583ec6453f5499c1b242f7ee9
+  Stored in directory: /tmp/pip-ephem-wheel-cache-y6zcv_9o/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
 Successfully built jetito
 Installing collected packages: jetito
 Successfully installed jetito-0.3.0
@@ -97,7 +97,7 @@ F-number = 1.5
 w0 = 0.76 um
 Rayleigh length Zr = 2.29 um
 Focus spot FWHM = 0.89 um
-/raid/home/fsalgado/Projects/Jetito/jetito/examples/Images/TA1_ElecAcc2023/focus/157_Fz=-6mm_600mJ_680_ND10ND10ND10ND03Laser+ND40Target191320_.png
+/raid/home/fsalgado/Projects/Jetito/jetito/examples/images/TA1_ElecAcc2023/focus/157_Fz=-6mm_600mJ_680_ND10ND10ND10ND03Laser+ND40Target191320_.png
 Image file loaded successfully!
 (1200, 1600)
 

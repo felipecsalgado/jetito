@@ -2,7 +2,7 @@ from jetito.focusspot import focusanalysis
 import os
 
 basepath = os.path.abspath(os.path.dirname(__file__)) + "/"
-file = basepath + "Images/TA1_ElecAcc2023/focus/" + \
+file = basepath + "images/TA1_ElecAcc2023/focus/" + \
     "157_Fz=-6mm_600mJ_680_ND10ND10ND10ND03Laser+ND40Target191320_.png"
 print(file)
 

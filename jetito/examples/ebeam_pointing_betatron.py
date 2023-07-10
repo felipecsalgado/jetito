@@ -1,6 +1,6 @@
 from jetito.ebeam import pointing
 
-file = "Images/Betatron/ebeam_pointing/877_A=2.8_ND08+ND04_195157_.png"
+file = "images/Betatron/ebeam_pointing/877_A=2.8_ND08+ND04_195157_.png"
 ebeam_anaylsis = pointing.pointing_analysis(file, rescale=True,
                                             image_calib=5/54,
                                             d_target_screen=0.9)
