@@ -2,14 +2,14 @@
 
 A python package to help evaluate data from experiment at the JETi-200 laser system at the Helmholtz Institute Jena (HIJ).
 
-**For working examples using real experimental data, please see the folder `examples/`**
+**For working examples** using real experimental data, please see the folder `examples/`
 
 ## Installation
 Jetito requires `python3`.
 
 The latest version of jetito should be installed directly from github using `pip` (python package manager):
 
-`pip install --user git+https://github.com/hixps/jetito.git`
+`pip install --user git+https://github.com/felipecsalgado/jetito.git`
 
 **After installing** the jetito package, users can import the package using `import jetito`.
 
@@ -39,7 +39,7 @@ Github: [https://github.com/felipecsalgado](https://github.com/felipecsalgado)
 
 If you feel like to contribute to the jetito package, please send us your pull requests, bug fixes and new features!
 
-## License
+# License
 
 ![CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
 
