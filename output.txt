@@ -1,0 +1,42 @@
+Processing /raid/home/fsalgado/Projects/Jetito
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+    Preparing wheel metadata: started
+    Preparing wheel metadata: finished with status 'done'
+Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (3.0.3)
+Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.4.1)
+Requirement already satisfied: numpy>=1.18.5 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.18.5)
+Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.7.5)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.3.0)
+Requirement already satisfied: cycler>=0.10 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (0.10.0)
+Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (1.0.1)
+Requirement already satisfied: six in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from cycler>=0.10->matplotlib>=3.0.3->jetito==0.3.0) (1.11.0)
+Requirement already satisfied: setuptools in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from kiwisolver>=1.0.1->matplotlib>=3.0.3->jetito==0.3.0) (40.6.2)
+Building wheels for collected packages: jetito
+  Building wheel for jetito (PEP 517): started
+  Building wheel for jetito (PEP 517): finished with status 'done'
+  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23350 sha256=6a089698c91f31f593eb5ad02e4e64a3e3af57ecc43721885be94bc90aa88d80
+  Stored in directory: /tmp/pip-ephem-wheel-cache-rhm43pel/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
+Successfully built jetito
+Installing collected packages: jetito
+Successfully installed jetito-0.3.0
+2.3.1
+/raid/home/fsalgado/Projects/Jetito
+=====  running next command =====
+$ python3 -m pip install --user .
+OK
+=====  running next command =====
+$ python3 -m pycodestyle --version
+OK
+=====  running next command =====
+$ python3 -m pycodestyle jetito --statistics --count --show-source --ignore=W391,E123,E226,E24,W504 --max-line-length=99
+OK
+=====  running next command =====
+$ python3 jetito/examples/test_farfield.py
+run-tests.py failed. aborting.
+The failing command was:
+python3 jetito/examples/test_farfield.py

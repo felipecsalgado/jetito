@@ -1,18 +1,18 @@
 import cv2
 from jetito.focusspot import farfield
-
-##
+#
 import os
 print(os.getcwd())
 
-"""Test file showing the basic commands to calculate the far-field
+"""
+Test file showing the basic commands to calculate the far-field
 of a laser beam using a near-field image.
 """
 
 file = "Images/JETi-200/JETi200_near_field.png"
 FF = farfield.farfield_calculator(file, image_calib=0.147e-3)
 
-FF.add_points(dim = 2**13)
+FF.add_points(dim=2**13)
 
 FF.calculate_far_field(wavelength=800e-9, distance=2.5, norm=True)
 

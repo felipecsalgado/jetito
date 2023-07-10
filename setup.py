@@ -13,10 +13,10 @@ setup(
     install_requires=[
         'numpy>=1.18.5',
         'matplotlib>=3.0.3',
-        'cv2>=4.4.0',
-        'png>=0.0.20',
-        'imageio>=2.9.0',
-        'scipy>=1.4.1'
+        #'cv2',
+        #'png',
+        #'imageio',
+        'scipy'
     ],
     keywords = [
         'jeti',
@@ -24,9 +24,16 @@ setup(
         'electron'
     ],
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Operating System :: OS Independent',
+        'Topic :: Scientific/Engineering :: Physics',
+        'Topic :: Scientific/Engineering',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Developers',
     ],
-    python_requires=">=3.10",
+    python_requires=">=3.5",
 )
 
