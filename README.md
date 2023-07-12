@@ -5,6 +5,7 @@ A python package to help evaluate data from experiment at the JETi-200 laser sys
 **For working examples** using real experimental data, please see the folder `examples/`
 
 ## Installation
+
 Jetito requires `python3`.
 
 The latest version of jetito should be installed directly from github using `pip` (python package manager):
@@ -14,6 +15,7 @@ The latest version of jetito should be installed directly from github using `pip
 **After installing** the jetito package, users can import the package using `import jetito`.
 
 **Note:**
+
 * Depending on your system python setup, `pip` may default to `python2`. In this case, you will need use substitute it to `pip3` and make sure that jetito is installed for `python3`.
 * The `--user` flag allows the package to be installed without `root` privileges by installing it into your user profile.
 
@@ -30,9 +32,23 @@ Please check the [changelog](changelog.md) file.
 
 # Credits
 
-**Felipe C. Salgado** (Friedrich-Schiller-Universität Jena, Helmholtz Institute Jena)
+**Felipe C. Salgado**
+(Friedrich-Schiller-Universität Jena, Helmholtz Institute Jena)
 
 Github: [https://github.com/felipecsalgado](https://github.com/felipecsalgado)
+
+* Farfield and laser focus
+* Electron beam
+  * Pointing analysis
+  * Emittance from pepper pots (code integration in the package)
+
+**Alperen Kozan**
+(Friedrich-Schiller-Universität Jena, Helmholtz Institute Jena)
+* Electron beam
+  * Emittance from pepper pots (base code creator)
+
+## Acknowledgements
+Thanks to our colleagues at the FSU Jena and Helmholtz Institute Jena for providing few experimental data for benchmarking the code. Special thanks to A. Seidel, Harsh, and [D. Seipt](https://github.com/danielseipt).
 
 # Contribute
 
