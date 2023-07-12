@@ -7,23 +7,23 @@ Processing /raid/home/fsalgado/Projects/Jetito
   Installing backend dependencies: finished with status 'done'
     Preparing wheel metadata: started
     Preparing wheel metadata: finished with status 'done'
-Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (3.0.3)
-Requirement already satisfied: numpy>=1.18.5 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.18.5)
-Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.3.0) (1.4.1)
-Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (1.0.1)
-Requirement already satisfied: cycler>=0.10 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (0.10.0)
-Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.7.5)
-Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.3.0) (2.3.0)
-Requirement already satisfied: six in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from cycler>=0.10->matplotlib>=3.0.3->jetito==0.3.0) (1.11.0)
-Requirement already satisfied: setuptools in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from kiwisolver>=1.0.1->matplotlib>=3.0.3->jetito==0.3.0) (40.6.2)
+Requirement already satisfied: matplotlib>=3.0.3 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.5.0) (3.0.3)
+Requirement already satisfied: numpy>=1.18.5 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.5.0) (1.18.5)
+Requirement already satisfied: scipy in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from jetito==0.5.0) (1.4.1)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.5.0) (2.3.0)
+Requirement already satisfied: python-dateutil>=2.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.5.0) (2.7.5)
+Requirement already satisfied: kiwisolver>=1.0.1 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.5.0) (1.0.1)
+Requirement already satisfied: cycler>=0.10 in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from matplotlib>=3.0.3->jetito==0.5.0) (0.10.0)
+Requirement already satisfied: six in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from cycler>=0.10->matplotlib>=3.0.3->jetito==0.5.0) (1.11.0)
+Requirement already satisfied: setuptools in /raid/home/fsalgado/.local/lib/python3.5/site-packages (from kiwisolver>=1.0.1->matplotlib>=3.0.3->jetito==0.5.0) (40.6.2)
 Building wheels for collected packages: jetito
   Building wheel for jetito (PEP 517): started
   Building wheel for jetito (PEP 517): finished with status 'done'
-  Created wheel for jetito: filename=jetito-0.3.0-py3-none-any.whl size=23569 sha256=f44b659162c6e3a3769dcfef03f4ba15241aebf583ec6453f5499c1b242f7ee9
-  Stored in directory: /tmp/pip-ephem-wheel-cache-y6zcv_9o/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
+  Created wheel for jetito: filename=jetito-0.5.0-py3-none-any.whl size=24249 sha256=ae6acfde10404bfe58a24d940144150157b6582c9bfda174284887eaba966134
+  Stored in directory: /tmp/pip-ephem-wheel-cache-m_e_bv4e/wheels/02/fc/9b/4e5b37bb11ca046a1cf3c2c02c96d4e6c7cc0792d751591aa2
 Successfully built jetito
 Installing collected packages: jetito
-Successfully installed jetito-0.3.0
+Successfully installed jetito-0.5.0
 2.8.0
 /raid/home/fsalgado/Projects/Jetito
 (1240, 1640)
@@ -196,6 +196,24 @@ Solid angle = 1.92e-04 sr
 Charge calibration = 4.235e-06 photons/count
 Sum of counts of the ROI image = 2691390
 Total charge of the beam = 11.399 pC
+Image file loaded successfully!
+1079
+
+Crop the image
+Shape of the cropped image: 1078 x 1078
+Saved cropped image at: /raid/home/fsalgado/Projects/Jetito/jetito/examples/results/ebeam/emittance-pp/ebeam_emittance_G4_cropped.png
+
+Starting calculating the rms emittance...
+The calculated rms emittance = 0.040193 mm mrad
+Image file loaded successfully!
+2048
+
+Crop the image
+Shape of the cropped image: 1115 x 1000
+Saved cropped image at: /raid/home/fsalgado/Projects/Jetito/jetito/examples/results/ebeam/emittance-pp/ebeam_emittance_PP_cropped.png
+
+Starting calculating the rms emittance...
+The calculated rms emittance = 0.035101 mm mrad
 =====  running next command =====
 $ python3 -m pip install --user .
 OK
@@ -203,7 +221,7 @@ OK
 $ python3 -m pycodestyle --version
 OK
 =====  running next command =====
-$ python3 -m pycodestyle jetito --statistics --count --show-source --ignore=W391,E123,E226,E24,W504 --max-line-length=99
+$ python3 -m pycodestyle jetito --statistics --count --show-source --ignore=W391,E123,E226,E24,W504,W605 --max-line-length=120
 OK
 =====  running next command =====
 $ python3 jetito/examples/test_farfield.py
@@ -219,4 +237,7 @@ $ python3 jetito/examples/ebeam_pointing_emittance.py
 OK
 =====  running next command =====
 $ python3 jetito/examples/ebeam_pointing_jeti.py
+OK
+=====  running next command =====
+$ python3 jetito/examples/ebeam_emittance_pp.py
 OK

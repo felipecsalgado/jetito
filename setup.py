@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='jetito',
-    version='0.3.0',
+    version='0.5.0',
     description='Classes and methods for data analyis of experimental results at JETi-200 laser system.',
     author='Felipe C. Salgado',
     author_email='felipe.salgado@uni-jena.de',
-    url='https://github.com/hixps/jetito',
+    url='https://github.com/felipecsalgado/jetito',
     license="CC-BY-NC-SA",
     packages=find_packages(include=['jetito', 'jetito.*']),
     install_requires=[

@@ -84,13 +84,14 @@ def run_alltests(python='python', fast=False, skip_setup=False):
 
     cmds = ['{python} -m pycodestyle --version',
             '{python} -m {pycodestyle} jetito --statistics --count --show-source '
-            '--ignore=W391,E123,E226,E24,W504 --max-line-length=99']
+            '--ignore=W391,E123,E226,E24,W504,W605 --max-line-length=120']
     # '{python} -m nose --exe']
     cmdo = ['{python} ' + os.path.join('jetito/examples', 'test_farfield.py'),
             '{python} ' + os.path.join('jetito/examples', 'test_farfield_theory.py'),
             '{python} ' + os.path.join('jetito/examples', 'test_focuspot_analysis.py'),
             '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_emittance.py'),
-            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py')]
+            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py'),
+            '{python} ' + os.path.join('jetito/examples', 'ebeam_emittance_pp.py')]
     if not fast:
         cmds += cmdo
     for cmd in cmds:

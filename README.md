@@ -22,7 +22,6 @@ The latest version of jetito should be installed directly from github using `pip
 The following functionalities are to be added in the future:
 
 * Electron-beam spectrum analysis
-* Emittance pepper-pot anaylsis
 * Emittance laser grating analysis
 
 ## Changelog
