@@ -277,9 +277,14 @@ class pp_emittance_calculator:
 
         # RMS emittance
         self.rms_emittance = np.sqrt((self.xfirst*self.xsecond-self.xthird) / self.x_N**2)
+        #
+        self.norm_emittance = np.sqrt(143**2 * (0.27 * self.xfirst*self.xsecond + self.xfirst*self.xsecond /
+                                                - self.xthird) / self.x_N**2)
 
         if verbose:
             print("The calculated rms emittance = %.6f mm mrad" % (self.rms_emittance))
+            print("The calculated normalized emittance = %.6f mm mrad" % (self.norm_emittance))
+            print("first term = %.6f" % (0.27 * self.xfirst*self.xsecond/self.x_N**2))
 
         return self.rms_emittance
 

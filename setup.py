@@ -10,14 +10,14 @@ setup(
     url='https://github.com/felipecsalgado/jetito',
     license="CC-BY-NC-SA",
     packages=find_packages(include=['jetito', 'jetito.*']),
-    install_requires=[
-        'numpy>=1.18.5',
-        'matplotlib>=3.0.3',
+    #install_requires=[
+        #'numpy>=1.18.5',
+        #'matplotlib>=3.0.3',
         #'cv2',
         #'png',
         #'imageio',
-        'scipy'
-    ],
+        #'scipy'
+    #],
     keywords = [
         'jeti',
         'lwfa',
