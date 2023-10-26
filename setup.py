@@ -9,7 +9,7 @@ setup(
     author_email='felipe.salgado@uni-jena.de',
     url='https://github.com/felipecsalgado/jetito',
     license="CC-BY-NC-SA",
-    packages=find_packages(include=['jetito', 'jetito.*']),
+    packages=find_packages(include=['jetito', 'jetito.*', 'jetito.ebeam.*', 'jetito.ebeam']),
     #install_requires=[
         #'numpy>=1.18.5',
         #'matplotlib>=3.0.3',
