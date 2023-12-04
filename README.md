@@ -1,6 +1,6 @@
 # Jetito
 
-A python package to help evaluate data from experiment at the JETi-200 laser system at the Helmholtz Institute Jena (HIJ).
+A python package to help evaluate data from experiment at the JETi-200 laser system at the Helmholtz Institute Jena (HIJ) and the nonlinear Breit-Wheeler pair production at the Centre for Advanced Laser Applications (CALA).
 
 **For working examples** using real experimental data, please see the folder `examples/`
 
@@ -24,7 +24,11 @@ The latest version of jetito should be installed directly from github using `pip
 The following functionalities are to be added in the future:
 
 * Electron-beam spectrum analysis
+  * Include new setup with new calibrated spectrometer
 * Emittance laser grating analysis
+* Breit-Wheeler pair-production experimental data analysis
+  * CsI detectors
+  * Beam energy, pointing, and charge
 
 ## Changelog
 
@@ -41,13 +45,17 @@ Github: [https://github.com/felipecsalgado](https://github.com/felipecsalgado)
 * Electron beam
   * Pointing analysis
   * Emittance from pepper pots (code integration in the package)
+* Pair-Production CALA experiment
+  * Calorimeter signal anaylsis (filtering, Bayesian signal+bakground anaylsis)
 
 **Alperen Kozan**
 (Friedrich-Schiller-Universität Jena, Helmholtz Institute Jena)
+
 * Electron beam
   * Emittance from pepper pots (base code creator)
 
 ## Acknowledgements
+
 Thanks to our colleagues at the FSU Jena and Helmholtz Institute Jena for providing few experimental data for benchmarking the code. Special thanks to A. Seidel, Harsh, and [D. Seipt](https://github.com/danielseipt).
 
 # Contribute
