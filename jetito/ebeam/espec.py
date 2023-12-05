@@ -37,7 +37,7 @@ class espec:
             self.set_folder = kwargs['set_folder']
             kwargs.pop('set_folder', None)
 
-    def getEspec(self, shotnumber, calib_file="../ebeam/espec_calib_files/", 
+    def getEspec(self, shotnumber, calib_file="../ebeam/espec_calib_files/",
                  **kwargs):
 
         # savename = date+set_pic+'_'+picturenumber
@@ -57,14 +57,14 @@ class espec:
             kwargs.pop('save_folder')
 
         # Check if a set folder is specified
-        if self.set_folder != None:  # There is a set folder
-            image1_name = os.path.join(self.parent_folder,"e-spec_1",self.set_folder,str(shotnumber))
-            image2_name = os.path.join(self.parent_folder,"e-spec_2",self.set_folder,str(shotnumber))
-            image3_name = os.path.join(self.parent_folder,"e-spec_3",self.set_folder,str(shotnumber))
+        if self.set_folder is not None:  # There is a set folder
+            image1_name = os.path.join(self.parent_folder, "e-spec_1", self.set_folder, str(shotnumber))
+            image2_name = os.path.join(self.parent_folder, "e-spec_2", self.set_folder, str(shotnumber))
+            image3_name = os.path.join(self.parent_folder, "e-spec_3", self.set_folder, str(shotnumber))
         else:
-            image1_name = os.path.join(self.parent_folder,"e-spec_1",str(shotnumber))
-            image2_name = os.path.join(self.parent_folder,"e-spec_2",str(shotnumber))
-            image3_name = os.path.join(self.parent_folder,"e-spec_3",str(shotnumber))
+            image1_name = os.path.join(self.parent_folder, "e-spec_1", str(shotnumber))
+            image2_name = os.path.join(self.parent_folder, "e-spec_2", str(shotnumber))
+            image3_name = os.path.join(self.parent_folder, "e-spec_3", str(shotnumber))
 
         # Get the images path and load them
         image1_name = glob.glob(image1_name + "*")[0]
@@ -84,24 +84,24 @@ class espec:
 
         # Post-processing low energy image
         im1 = copy.copy(image1)
-        im1 = im1.rotate(-0.05,resample=Image.Resampling.BICUBIC)
+        im1 = im1.rotate(-0.05, resample=Image.Resampling.BICUBIC)
         im1_crop = im1.crop((200, 800, 2200, 1040))
         img_array = np.array(im1_crop)
 
         if save:
             fig = plt.figure(figsize=(10, 3))
             plt.imshow(img_array)
-            save_low_energy = save_folder + str(shotnumber) +  "_low_energy.png"
+            save_low_energy = save_folder + str(shotnumber) + "_low_energy.png"
             fig.savefig(save_low_energy, dpi=450, facecolor='white', format='png', bbox_inches='tight')
             plt.show()
 
         # Post-processing mid-energy image (center energy)
         im2 = copy.copy(image2)
-        im2 = im2.rotate(0.1,resample=Image.Resampling.BICUBIC)
+        im2 = im2.rotate(0.1, resample=Image.Resampling.BICUBIC)
         im2_crop = im2.crop((180, 700, 2200, 990))
         scale2 = 5.74/5.75
         oldsize_2 = im2_crop.size
-        im2_crop = im2_crop.resize((int(oldsize_2[0]*scale2),int(oldsize_2[1]*scale2)))
+        im2_crop = im2_crop.resize((int(oldsize_2[0] * scale2), int(oldsize_2[1] * scale2)))
         img_array = np.array(im2_crop)
 
         if save:
@@ -116,7 +116,7 @@ class espec:
         im3_crop = im3.crop((180, 700, 2250, 990))
         scale3 = 5.74/5.7
         oldsize_3 = im3_crop.size
-        im3_crop = im3_crop.resize((int(oldsize_3[0]*scale3),int(oldsize_3[1]*scale3)))
+        im3_crop = im3_crop.resize((int(oldsize_3[0] * scale3), int(oldsize_3[1] * scale3)))
         img_array = np.array(im3_crop)
 
         if save:
@@ -132,15 +132,15 @@ class espec:
         im3_crop = im3_crop.crop((0, 31, 2045, 271))
 
         # Join the images
-        new_all = Image.new('I',(im1_crop.size[0]+im2_crop.size[0]+im3_crop.size[0],im1_crop.size[1]))
-        new_all.paste(im3_crop,(0,0))
-        new_all.paste(im2_crop,(im3_crop.size[0],0))
-        new_all.paste(im1_crop,(im2_crop.size[0]+im3_crop.size[0],0))
+        new_all = Image.new('I', (im1_crop.size[0] + im2_crop.size[0] + im3_crop.size[0], im1_crop.size[1]))
+        new_all.paste(im3_crop, (0, 0))
+        new_all.paste(im2_crop, (im3_crop.size[0], 0))
+        new_all.paste(im1_crop, (im2_crop.size[0] + im3_crop.size[0], 0))
 
         # Display and save joined image
         img_array = np.array(new_all)
 
-        #distance_sorce_spec = 1.500
+        # distance_sorce_spec = 1.500
         calib_px_per_mm = 5.74
         distance_sorce_spec = 20*calib_px_per_mm
         background = 375
@@ -149,7 +149,10 @@ class espec:
             fig, axes1 = plt.subplots(1, 1, figsize=(10, 5))
             axes = iter(np.ravel(axes1))
             ax = next(axes)
-            ax.imshow(img_array,extent=((np.shape(img_array)[1]+distance_sorce_spec)/calib_px_per_mm,+distance_sorce_spec/calib_px_per_mm,-im3_crop.size[1]/2/calib_px_per_mm,im3_crop.size[1]/2/calib_px_per_mm))
+            ax.imshow(img_array, extent=((np.shape(img_array)[1] + distance_sorce_spec) / calib_px_per_mm,
+                                         + distance_sorce_spec / calib_px_per_mm,
+                                         - im3_crop.size[1] / 2 / calib_px_per_mm,
+                                         im3_crop.size[1] / 2 / calib_px_per_mm))
             ax.set_xlabel('Deflection (mm)', fontsize=12)
             ax.set_ylabel('y (mm)', fontsize=12)
             ax.tick_params(axis='y', labelsize=8)
