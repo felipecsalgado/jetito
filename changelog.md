@@ -1,5 +1,10 @@
 # Changelog of Jetito
 
+## v0.5.5
+* Added new ebeam module: espec analysis for the long electron spectrometer at JETi200 TA1.
+  * Class and methods to post-process, join three images and calculate the dQ/dE of the long spectrometer.
+  * Exaple jupyter notebook attached.
+
 ## v0.5.0
 * Added new module: breitwheeler
   * Routines for analyising data from the pair-production experiment at CALA

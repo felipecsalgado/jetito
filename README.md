@@ -24,7 +24,7 @@ The latest version of jetito should be installed directly from github using `pip
 The following functionalities are to be added in the future:
 
 * Electron-beam spectrum analysis
-  * Include new setup with new calibrated spectrometer
+  * Espec analysis for the 10 cm and 20 cm magnets + examples
 * Emittance laser grating analysis
 * Breit-Wheeler pair-production experimental data analysis
   * CsI detectors
