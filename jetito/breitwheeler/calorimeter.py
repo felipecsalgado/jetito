@@ -527,19 +527,27 @@ class bwset:
             # pico17
             self.pico17_Npe_dict_set_norm[key] = [i / j for i, j in zip(self.pico17_Npe_dict_set[key],
                                                                         self.useful_shotnumbers_charge_set_pico17)]
+            # Remove the negative elements from the list
+            self.pico17_Npe_dict_set_norm[key] = [ele for ele in self.pico17_Npe_dict_set_norm[key] if ele > 0]
+
             self.pico17_Npe_dict_ref_norm[key] = [i / j for i, j in zip(self.pico17_Npe_dict_ref[key],
                                                                         self.useful_shotnumbers_charge_ref_pico17)]
+            # Remove the negative elements from the list
+            self.pico17_Npe_dict_ref_norm[key] = [ele for ele in self.pico17_Npe_dict_ref_norm[key] if ele > 0]
 
             # pico22
             self.pico22_Npe_dict_set_norm[key] = [i / j for i, j in zip(self.pico22_Npe_dict_set[key],
                                                                         self.useful_shotnumbers_charge_set_pico22)]
+            # Remove the negative elements from the list
+            self.pico22_Npe_dict_set[key] = [ele for ele in self.pico22_Npe_dict_set[key] if ele > 0]
+
             self.pico22_Npe_dict_ref_norm[key] = [i / j for i, j in zip(self.pico22_Npe_dict_ref[key],
                                                                         self.useful_shotnumbers_charge_ref_pico22)]
+            # Remove the negative elements from the list
+            self.pico22_Npe_dict_ref[key] = [ele for ele in self.pico22_Npe_dict_ref[key] if ele > 0]
 
         if verbose:
             print("Normalized Npe of the reference and data were calculated")
-
-        return 0
 
     def getBayesMeanStd(self, observedSignal, observedBkg, signal_min_Npe=10e3, signal_max_Npe=100e3,
                         bkg_min_Npe=1e3, bkg_max_Npe=80e3, verbose=True, **kwargs):

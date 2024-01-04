@@ -107,7 +107,8 @@ class farfield_calculator:
     def calculate_far_field(self,
                             wavelength=800e-9,
                             distance=2.5,
-                            norm=True):
+                            norm=True,
+                            **kwargs):
         """
         Calculate the far field from the near field of a light beam using 2D FFT
         with interpolation.
@@ -122,10 +123,16 @@ class farfield_calculator:
         Returns:
             ndarray: 2D array representing the far-field distribution.
         """
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
 
         try:
-            print("")
-            print("Calculating 2D Fourier Transform....")
+            if verbose:
+                print("")
+                print("Calculating 2D Fourier Transform....")
             # Calculate the wave number
             k = 2 * np.pi / wavelength
 
@@ -144,9 +151,13 @@ class farfield_calculator:
                 self.far_field = self.far_field/np.max(self.far_field)
 
             delta_fx = 1/(self.near_field.shape[0] * (self.image_calib)) * 2 * np.pi
-            print("delta_fx = %.3e " % delta_fx)
+
+            if verbose:
+                print("delta_fx = %.3e " % delta_fx)
             delta_fy = 1/(self.near_field.shape[1] * (self.image_calib)) * 2 * np.pi
-            print("delta_fy = %.3e " % delta_fy)
+
+            if verbose:
+                print("delta_fy = %.3e " % delta_fy)
 
             k_x = np.arange(-self.near_field.shape[0]/2, self.near_field.shape[0]/2) * delta_fx
             k_y = np.arange(-self.near_field.shape[1]/2, self.near_field.shape[1]/2) * delta_fy
@@ -160,7 +171,9 @@ class farfield_calculator:
             # Create the frequency meshgrid
             self.FF_x, self.FF_y = np.meshgrid(FF_x, FF_y)
 
-            print("2D Fourier Transform calculated successfully!")
+            if verbose:
+                print("2D Fourier Transform calculated successfully!")
+
         except (RuntimeError, TypeError, NameError):
             print("Error while calculating the 2D-Fourier Transform")
 
@@ -213,31 +226,49 @@ class farfield_calculator:
 
         return 0
 
-    def ff_2dgaussian_fit(self):
+    def ff_2dgaussian_fit(self, **kwargs):
         """
         Do a 2D Gaussian fit on the far-field distribution
 
         Returns:
             ndarray: _description_
         """
+
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         try:
-            print("")
-            print("2D Gaussian fit in the FF distribution starting....")
+            if verbose:
+                print("")
+                print("2D Gaussian fit in the FF distribution starting....")
+
             self. popt_fit, self.pcov_fit = gf.fit2d(XX=self.freq_X_crop,
                                                      YY=self.freq_Y_crop,
                                                      ZZ=self.far_field_crop,
                                                      initial_guess=(1, 0, 0, 10, 10, 0, 0),
-                                                     output=True)
-            print("2D Gaussian fit completed!")
+                                                     output=verbose)
+            if verbose:
+                print("2D Gaussian fit completed!")
+
         except (RuntimeError, TypeError, NameError):
             print("Error in the 2D Gaussian fit.")
 
         return self.popt_fit, self.pcov_fit
 
-    def getQfactor(self):
+    def getQfactor(self, **kwargs):
         """
         Calculates the q-factor of the far-field after a Fourier Transform is performed.
         """
+
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         idx_q_factor = self.far_field_crop > 0.5
 
         counts_within_FWHM = np.sum(self.far_field_crop[idx_q_factor])
@@ -245,8 +276,9 @@ class farfield_calculator:
 
         self.q_factor = counts_within_FWHM/total_counts * 100
 
-        print("")
-        print("q-factor = %.1f %%" % self.q_factor)
+        if verbose:
+            print("")
+            print("q-factor = %.1f %%" % self.q_factor)
 
     def plot_fields_fit(self, save_file):
 
