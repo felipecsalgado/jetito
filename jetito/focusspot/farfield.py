@@ -32,7 +32,7 @@ class farfield_calculator:
     to work with this class.
     """
 
-    def __init__(self, filename, image_calib=0.147e-3):
+    def __init__(self, filename, image_calib=0.147e-3, **kwargs):
         """Contructor of the farfield_calculator class.
 
         Args:
@@ -45,11 +45,19 @@ class farfield_calculator:
         self.file = filename
         self.image_calib = image_calib
 
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         try:
             self.img_nearfield = cv2.imread(self.file, cv2.IMREAD_GRAYSCALE)
             # cv2.imwrite("test.png", self.img_nearfield)
-            print(self.img_nearfield.shape)
-            print("Image file loaded successfully!")
+            if verbose:
+                print(self.img_nearfield.shape)
+                print("Image file loaded successfully!")
+
         except (RuntimeError, TypeError, NameError):
             print("Error loading the image file")
 
