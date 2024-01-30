@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 from matplotlib.ticker import (MultipleLocator)
 import cv2
 # Packages to calculate the far-field
@@ -199,7 +200,7 @@ class farfield_calculator:
         self.freq_X_crop = self.crop_center(self.FF_x, FF_crop, FF_crop)
         self.freq_Y_crop = self.crop_center(self.FF_y, FF_crop, FF_crop)
 
-    def plot_fields(self, save_file):
+    def plot_fields(self, save_file, **kwargs):
         """
         Plots the near-field and far-fields after a 2D Fourier Transform is performed.
 
@@ -221,9 +222,9 @@ class farfield_calculator:
         ax.set_ylim(-7, 7)
 
         ax = next(axes)
-        ax.pcolormesh(self.freq_X_crop, self.freq_Y_crop, self.far_field_crop, cmap='jet', vmax=1)
-        ax.set_xlim(-60, 60)
-        ax.set_ylim(-60, 60)
+        ax.pcolormesh(self.freq_X_crop, self.freq_Y_crop, self.far_field_crop, cmap='jet', **kwargs)
+        ax.set_xlim(-300, 300)
+        ax.set_ylim(-300, 300)
         ax.set_title('Far Field')
         ax.set_xlabel('\u03BCm')
         ax.set_ylabel('\u03BCm')
