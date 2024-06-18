@@ -585,23 +585,23 @@ class bwset:
 
             trace2 = pm.compute_log_likelihood(trace)
 
-        result_trace = az.summary(trace, kind='stats')
+        self.result_trace = az.summary(trace, kind='stats')
 
         if save_filtered:
-            signal_mean_post = trace.posterior.signal_mean.data[0]
-            bg_mean_post = trace.posterior.bg_mean.data[0]
+            self.signal_mean_post = trace.posterior.signal_mean.data[0]
+            self.bg_mean_post = trace.posterior.bg_mean.data[0]
 
             # Background
             fig, axes1 = plt.subplots(1, 2, figsize=(8, 3), layout='constrained')
             axes = iter(np.ravel(axes1))
             #
             ax = next(axes)
-            ax.plot(bg_mean_post)
+            ax.plot(self.bg_mean_post)
             ax.set_xlabel('trial')
             ax.set_ylabel('bg mean')
 
             ax = next(axes)
-            n, bin, _ = ax.hist(bg_mean_post, bins=20, density=True)
+            n, bin, _ = ax.hist(self.bg_mean_post, bins=20, density=True)
             ax.set_xlabel('bg mean')
             ax.set_ylabel('PDF')
 
@@ -615,12 +615,12 @@ class bwset:
             axes = iter(np.ravel(axes1))
 
             ax = next(axes)
-            ax.plot(signal_mean_post)
+            ax.plot(self.signal_mean_post)
             ax.set_xlabel('trial')
             ax.set_ylabel('signal mean')
 
             ax = next(axes)
-            n, bin, _ = ax.hist(signal_mean_post, bins=20, density=True)
+            n, bin, _ = ax.hist(self.signal_mean_post, bins=20, density=True)
             ax.set_xlabel('signal mean')
             ax.set_ylabel('PDF')
 
@@ -629,10 +629,12 @@ class bwset:
             plt.show()
 
             if verbose:
-                print("Signal = %.1f +/- %.1f" % (result_trace['mean']['signal_mean'],
-                                                  result_trace['sd']['signal_mean']))
-                print("Background = %.1f +/- %.1f" % (result_trace['mean']['bg_mean'],
-                                                      result_trace['sd']['bg_mean']))
+                print("Signal = %.1f +/- %.1f" % (self.result_trace['mean']['signal_mean'],
+                                                  self.result_trace['sd']['signal_mean']))
+                print("Background = %.1f +/- %.1f" % (self.result_trace['mean']['bg_mean'],
+                                                      self.result_trace['sd']['bg_mean']))
+                print("Background + signal = %.1f" % (self.result_trace['mean']['bg_mean'] +
+                                                      self.result_trace['mean']['signal_mean']))
 
-        return (result_trace['mean']['signal_mean'], result_trace['sd']['signal_mean'],
-                result_trace['mean']['bg_mean'], result_trace['sd']['bg_mean'])
+        return (self.result_trace['mean']['signal_mean'], self.result_trace['sd']['signal_mean'],
+                self.result_trace['mean']['bg_mean'], self.result_trace['sd']['bg_mean'])
