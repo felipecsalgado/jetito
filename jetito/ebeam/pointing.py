@@ -229,14 +229,28 @@ class pointing_analysis:
             self.fwhm_x = 2.35*self.popt_fit[3]
             self.fwhm_y = 2.35*self.popt_fit[4]
 
-            self.div_fwhm_x = np.arctan(self.fwhm_x * 1e-3 / self.dist_target_screen)
-            self.div_fwhm_y = np.arctan(self.fwhm_y * 1e-3 / self.dist_target_screen)
+            if self.fwhm_x > self.fwhm_y:
+                self.major_fwhm = self.fwhm_x
+                self.minor_fwhm = self.fwhm_y
+            else:
+                self.major_fwhm = self.fwhm_y
+                self.minor_fwhm = self.fwhm_x
+
+            self.div_major_fwhm = np.arctan(self.major_fwhm * 1e-3 / self.dist_target_screen)
+            self.div_minor_fwhm = np.arctan(self.minor_fwhm * 1e-3 / self.dist_target_screen)
 
             self.sigma_x = self.popt_fit[3]
             self.sigma_y = self.popt_fit[4]
 
-            self.div_sigma_x = np.arctan(self.sigma_x * 1e-3 / self.dist_target_screen)
-            self.div_sigma_y = np.arctan(self.sigma_y * 1e-3 / self.dist_target_screen)
+            if self.sigma_x > self.sigma_y:
+                self.major_rms = self.sigma_x
+                self.minor_rms = self.sigma_y
+            else:
+                self.major_rms = self.sigma_y
+                self.minor_rms = self.sigma_x
+
+            self.div_major_rms = np.arctan(self.major_rms * 1e-3 / self.dist_target_screen)
+            self.div_minor_rms = np.arctan(self.minor_rms * 1e-3 / self.dist_target_screen)
 
         except (RuntimeError, TypeError, NameError):
             print("Error while calculating the focus parameters")
@@ -260,22 +274,22 @@ class pointing_analysis:
             verbose = kwargs['verbose']
             kwargs.pop('verbose', None)
 
-        self.div_fwhm_x = np.arctan(self.fwhm_x/2 * 1e-3 / self.dist_target_screen)
-        self.div_fwhm_y = np.arctan(self.fwhm_y/2 * 1e-3 / self.dist_target_screen)
+        #self.div_fwhm_x = np.arctan(self.major_fwhm/2 * 1e-3 / self.dist_target_screen)
+        #self.div_major_y = np.arctan(self.major_y/2 * 1e-3 / self.dist_target_screen)
 
-        self.div_sigma_x = np.arctan(self.sigma_x * 1e-3 / self.dist_target_screen)
-        self.div_sigma_y = np.arctan(self.sigma_y * 1e-3 / self.dist_target_screen)
+        #self.div_sigma_x = np.arctan(self.sigma_x * 1e-3 / self.dist_target_screen)
+        #self.div_sigma_y = np.arctan(self.sigma_y * 1e-3 / self.dist_target_screen)
 
         if verbose:
             print("")
             print("Divergence of the ebeam")
-            print("RMS Divergence sigma_x = %.3f mrad" % (self.div_sigma_x * 1e3))
-            print("RMS Divergence sigma_y = %.3f mrad" % (self.div_sigma_y * 1e3))
+            print("RMS Divergence major_sigma = %.3f mrad" % (self.div_major_rms * 1e3))
+            print("RMS Divergence minor_sigma = %.3f mrad" % (self.div_minor_rms * 1e3))
 
-            print("Half-angle divergence FWHM_x = %.3f mrad" % (self.div_fwhm_x * 1e3))
-            print("Half-angle divergence FWHM_y = %.3f mrad" % (self.div_fwhm_y * 1e3))
+            print("Half-angle divergence major FWHM = %.3f mrad" % (self.div_major_fwhm * 1e3))
+            print("Half-angle divergence minor FWHM = %.3f mrad" % (self.div_minor_fwhm * 1e3))
 
-        return self.div_fwhm_x, self.div_fwhm_y, self.div_sigma_x, self.div_sigma_y
+        return self.div_major_fwhm, self.div_minor_fwhm, self.div_major_rms, self.div_minor_rms
 
     def plot_fields_fit(self, save_file=None, xlim=None, ylim=None, clim=None, **kwargs):
         """
