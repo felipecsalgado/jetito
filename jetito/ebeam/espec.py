@@ -160,6 +160,7 @@ class espec:
             save_espec_energy = save_folder + str(shotnumber) + "_e-spec_energy.png"
             fig.savefig(save_espec_energy, dpi=450, facecolor='white', format='png', bbox_inches='tight')
             plt.show()
+            #new_all.save("calib_image.tiff")
 
         # Rescale the deflection axis to energy according to the calibraiton
         # of the spectrometer. The calibration file is located in the same folder

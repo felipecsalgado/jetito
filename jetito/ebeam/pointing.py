@@ -315,28 +315,28 @@ class pointing_analysis:
                    levels=[Z_FWHM], colors=['black'])
 
         # Text legend 1: x-parameters
-        text_legend = (r"$\sigma_x$ = %.1f mm\n" +
-                       r"$2\sigma_x$ = %.1f mm\n" +
-                       r"FWHM$_x$ = %.1f mm\n" +
-                       r"rms div_x = %.2f mrad") % (self.popt_fit[3],
-                                                    2*self.popt_fit[3],
-                                                    2.35*self.popt_fit[3],
-                                                    self.div_sigma_x*1e3)
-        _ = ax.text(0.02, 0.125, text_legend, horizontalalignment='left', color='white',
-                    fontsize=8, weight='bold', verticalalignment='center',
-                    transform=ax.transAxes)
+        #text_legend = ("$\sigma_x$ = %.1f mm\n" +
+        #               "$2\sigma_x$ = %.1f mm\n" +
+        #               "FWHM$_x$ = %.1f mm\n" +
+        #               "rms div_x = %.2f mrad") % (self.popt_fit[3],
+        #                                            2*self.popt_fit[3],
+        #                                            2.35*self.popt_fit[3],
+        #                                            self.div_sigma_x*1e3)
+        #_ = ax.text(0.02, 0.125, text_legend, horizontalalignment='left', color='white',
+        #            fontsize=8, weight='bold', verticalalignment='center',
+        #            transform=ax.transAxes)
 
         # Text legend 2: y-parameters
-        text_legend2 = (r"$\sigma_y$ = %.1f mm\n" +
-                        r"$2\sigma_y$ = %.1f mm\n" +
-                        r"FWHM$_y$ = %.1f mm\n" +
-                        r"rms div_y = %.2f mrad") % (self.popt_fit[4],
-                                                     2*self.popt_fit[4],
-                                                     2.35*self.popt_fit[4],
-                                                     self.div_sigma_y*1e3)
-        _ = ax.text(0.6, 0.125, text_legend2, horizontalalignment='left', color='white',
-                    fontsize=8, weight='bold', verticalalignment='center',
-                    transform=ax.transAxes)
+        #text_legend2 = ("$\sigma_y$ = %.1f mm\n" +
+        #                "$2\sigma_y$ = %.1f mm\n" +
+        #                "FWHM$_y$ = %.1f mm\n" +
+        #                "rms div_y = %.2f mrad") % (self.popt_fit[4],
+        #                                             2*self.popt_fit[4],
+        #                                             2.35*self.popt_fit[4],
+        #                                             self.div_sigma_y*1e3)
+        #_ = ax.text(0.6, 0.125, text_legend2, horizontalalignment='left', color='white',
+        #            fontsize=8, weight='bold', verticalalignment='center',
+        #            transform=ax.transAxes)
 
         # Text legend 3: charge
         try:

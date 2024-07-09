@@ -46,7 +46,7 @@ class focusspot_analysis:
         self.image_calib = image_calib
 
         try:
-            self.image_focus = cv2.imread(self.file, cv2.IMREAD_GRAYSCALE)
+            self.image_focus = cv2.imread(self.file, -1)
 
             print("Image file loaded successfully!")
             print(self.image_focus.shape)
@@ -173,6 +173,13 @@ class focusspot_analysis:
             self.fwhm_x = 2.35*self.popt_fit[3]
             self.fwhm_y = 2.35*self.popt_fit[4]
 
+            if self.fwhm_x > self.fwhm_y:
+                self.major_fwhm = self.fwhm_x
+                self.minor_fwhm = self.fwhm_y
+            else:
+                self.major_fwhm = self.fwhm_y
+                self.minor_fwhm = self.fwhm_x
+
         except (RuntimeError, TypeError, NameError):
             print("Error while calculating the focus parameters")
             self.popt_fit = -1
@@ -184,10 +191,24 @@ class focusspot_analysis:
         """
         Calculates the q-factor of the far-field after a Fourier Transform is performed
         """
-        idx_q_factor = self.image_crop > (self.popt_fit[0]/2)
+        self.image_crop = np.double(self.image_crop)
+        self.image_crop -= 500
+        self.image_crop[self.image_crop < 0] = 0
+        idx_q_factor = np.argwhere(self.image_crop > (self.popt_fit[0]/2))
+        #idx_q_factor = np.argwhere(self.image_crop > (np.max(self.image_crop)*0.37))
+        q_factor_list = [self.image_crop[idx_q_factor[i][0],idx_q_factor[i][1]] for i in range(idx_q_factor.shape[0])]
 
-        counts_within_FWHM = np.sum(self.image_crop[idx_q_factor])
+        #plt.imshow(self.image_crop[idx_q_factor])
+        #plt.show()
+
+        #from PIL import Image
+        #im = Image.fromarray(self.image_crop)
+        #im.save("your_file.tiff")
+
+        counts_within_FWHM = np.sum(q_factor_list)
+
         total_counts = np.sum(self.image_crop)
+        print(counts_within_FWHM, total_counts)
 
         self.q_factor = counts_within_FWHM/total_counts * 100
 
