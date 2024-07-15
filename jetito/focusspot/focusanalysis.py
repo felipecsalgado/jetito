@@ -32,7 +32,7 @@ class focusspot_analysis:
     Examples are provided on how to perform the data analysis in the test/focus_analysis folder.
     """
 
-    def __init__(self, filename, image_calib=0.4):
+    def __init__(self, filename, image_calib=0.4, beam_energy=1.7, pulse_duration=30e-15):
         """Contructor of the focusspot_analysis class.
 
         Args:
@@ -40,10 +40,15 @@ class focusspot_analysis:
             the far-field distribution.
             image_calib (double, optional): Calibration of the near-field image in units
             of length/pixel (typical: um/pixels). Defaults to 0.4.
+            beam_energy (double, optional): energy contained in the focused beam in Joules.
+            Calibrated using power meter in the chamber (valid for jeti). Default = 1.7 J.
+            pulse_duration (double, optional): pulse duration of the laser pulse in seconds.
         """
 
         self.file = filename
         self.image_calib = image_calib
+        self.beam_energy = beam_energy
+        self.pulse_duration = pulse_duration
 
         try:
             self.image_focus = cv2.imread(self.file, -1)
@@ -205,17 +210,36 @@ class focusspot_analysis:
         #im = Image.fromarray(self.image_crop)
         #im.save("your_file.tiff")
 
-        counts_within_FWHM = np.sum(q_factor_list)
+        self.counts_within_FWHM = np.sum(q_factor_list)
 
-        total_counts = np.sum(self.image_crop)
-        print(counts_within_FWHM, total_counts)
+        self.total_counts = np.sum(self.image_crop)
+        print(self.counts_within_FWHM, self.total_counts)
 
-        self.q_factor = counts_within_FWHM/total_counts * 100
+        self.q_factor = self.counts_within_FWHM/self.total_counts * 100
 
         print("")
         print("q-factor = %.1f %%" % self.q_factor)
 
         return self.q_factor
+
+    def getIntensity(self):
+        """
+        Calculates the Intensity in W/cm2 based on the FWHM and energy of the beam.
+        Only possible if the FWHM and focus parameters were calculated alredy.
+        """
+        if self.counts_within_FWHM is None:
+            print("Error in calculating the Intensity!")
+            print("Please run calculate_focus_parameters and getQfactor methods before!")
+            return -1
+        else:
+            # calculate the energy per pixel
+            energy_per_pixel = self.beam_energy / self.total_counts
+            energy_fwhm = energy_per_pixel * self.counts_within_FWHM
+            area_cm2 = np.pi * (self.major_fwhm / 2.) * (self.minor_fwhm / 2.) * 1.e-8
+            self.intensity = energy_fwhm / (self.pulse_duration * area_cm2)
+            return self.intensity
+
+        return 0
 
     def plot_fields_fit(self, save_file=None, xlim=None, ylim=None, clim=None, **kwargs):
         """
