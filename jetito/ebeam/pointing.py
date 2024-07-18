@@ -27,7 +27,8 @@ ml = MultipleLocator(2)
 
 class pointing_analysis:
 
-    def __init__(self, filename, rescale=False, image_calib=18.3e-3, d_target_screen=1.45):
+    def __init__(self, filename, rescale=False, image_calib=18.3e-3, d_target_screen=1.45,
+                 **kwargs):
         """
         Contructor of the pointing_analysis class.
 
@@ -40,6 +41,12 @@ class pointing_analysis:
             where the pointing image was recorded (typical: meters). Defaults to 1.45.
         """
 
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         self.file = filename
         self.image_calib = image_calib
         self.dist_target_screen = d_target_screen
@@ -50,8 +57,9 @@ class pointing_analysis:
             else:
                 self.image_pointing = cv2.imread(self.file, -1)
 
-            print("Image file loaded successfully!")
-            print(self.image_pointing.shape[0])
+            if verbose:
+                print("Image file loaded successfully!")
+                print(self.image_pointing.shape[0])
 
         except (RuntimeError, TypeError, NameError):
             print("Error loading the image file")

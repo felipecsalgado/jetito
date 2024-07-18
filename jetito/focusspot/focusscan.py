@@ -125,27 +125,27 @@ class focusscan:
         print("FWHM values:")
         mean_major_fwhm = np.mean(self.major_fwhm)
         std_major_fwhm = np.std(self.major_fwhm)
-        print("Major fwhm = ( %.1f +/- %.1f ) um" % (mean_major_fwhm, std_major_fwhm))
+        print("Major fwhm = ( %.5f +/- %.5f ) um" % (mean_major_fwhm, std_major_fwhm))
 
         mean_minor_fwhm = np.mean(self.minor_fwhm)
         std_minor_fwhm = np.std(self.minor_fwhm)
-        print("Minor fwhm = ( %.1f +/- %.1f ) um" % (mean_minor_fwhm, std_minor_fwhm))
+        print("Minor fwhm = ( %.5f +/- %.5f ) um" % (mean_minor_fwhm, std_minor_fwhm))
 
         print("")
         print("RMS sigma values:")
         mean_major_sigma = np.mean(self.major_sigma)
         std_major_sigma = np.std(self.major_sigma)
-        print("Major sigma = ( %.1f +/- %.1f ) um" % (mean_major_sigma, std_major_sigma))
+        print("Major sigma = ( %.5f +/- %.5f ) um" % (mean_major_sigma, std_major_sigma))
 
         mean_minor_sigma = np.mean(self.minor_sigma)
         std_minor_sigma = np.std(self.minor_sigma)
-        print("Minor sigma = ( %.1f +/- %.1f ) um" % (mean_minor_sigma, std_minor_sigma))
+        print("Minor sigma = ( %.5f +/- %.5f ) um" % (mean_minor_sigma, std_minor_sigma))
 
         print("")
         mean_q_sigma = np.mean(self.q_factor_percentage)
         std_q_sigma = np.std(self.q_factor_percentage)
-        print("Q-factor = ( %.1f +/- %.1f ) %%" % (mean_q_sigma, std_q_sigma))
+        print("Q-factor = ( %.5f +/- %.5f ) %%" % (mean_q_sigma, std_q_sigma))
 
         mean_intensity = np.mean(self.intensity_wcm2) * 1e-18
         std_intensity = np.std(self.intensity_wcm2) * 1e-18
-        print("Intensity = ( %.1f +/- %.1f ) x 10^{18} W/cm2" % (mean_intensity, std_intensity))
+        print("Intensity = ( %.5f +/- %.5f ) x 10^{18} W/cm2" % (mean_intensity, std_intensity))
