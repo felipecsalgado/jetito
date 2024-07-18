@@ -32,7 +32,8 @@ class focusspot_analysis:
     Examples are provided on how to perform the data analysis in the test/focus_analysis folder.
     """
 
-    def __init__(self, filename, image_calib=0.4, beam_energy=1.7, pulse_duration=30e-15):
+    def __init__(self, filename, image_calib=0.4, beam_energy=1.7, pulse_duration=30e-15,
+                 **kwargs):
         """Contructor of the focusspot_analysis class.
 
         Args:
@@ -45,6 +46,12 @@ class focusspot_analysis:
             pulse_duration (double, optional): pulse duration of the laser pulse in seconds.
         """
 
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         self.file = filename
         self.image_calib = image_calib
         self.beam_energy = beam_energy
@@ -53,8 +60,10 @@ class focusspot_analysis:
         try:
             self.image_focus = cv2.imread(self.file, -1)
 
-            print("Image file loaded successfully!")
-            print(self.image_focus.shape)
+            if verbose:
+                print("Image file loaded successfully!")
+                print(self.image_focus.shape)
+
         except (RuntimeError, TypeError, NameError):
             print("Error loading the image file")
 
@@ -185,6 +194,9 @@ class focusspot_analysis:
                 self.major_fwhm = self.fwhm_y
                 self.minor_fwhm = self.fwhm_x
 
+            self.major_sigma = self.major_fwhm / 2.35
+            self.minor_sigma = self.minor_fwhm / 2.35
+
         except (RuntimeError, TypeError, NameError):
             print("Error while calculating the focus parameters")
             self.popt_fit = -1
@@ -192,10 +204,17 @@ class focusspot_analysis:
 
         return self.popt_fit, self.pcov_fit
 
-    def getQfactor(self):
+    def getQfactor(self, **kwargs):
         """
         Calculates the q-factor of the far-field after a Fourier Transform is performed
         """
+
+        if 'verbose' not in kwargs:
+            verbose = False
+        else:
+            verbose = kwargs['verbose']
+            kwargs.pop('verbose', None)
+
         self.image_crop = np.double(self.image_crop)
         self.image_crop -= 500
         self.image_crop[self.image_crop < 0] = 0
@@ -213,12 +232,15 @@ class focusspot_analysis:
         self.counts_within_FWHM = np.sum(q_factor_list)
 
         self.total_counts = np.sum(self.image_crop)
-        print(self.counts_within_FWHM, self.total_counts)
+
+        if verbose:
+            print("Counts within FWHM = %d counts" % (self.counts_within_FWHM))
+            print("Total counts within ROI = %d counts" % (self.total_counts))
 
         self.q_factor = self.counts_within_FWHM/self.total_counts * 100
 
-        print("")
-        print("q-factor = %.1f %%" % self.q_factor)
+        if verbose:
+            print("Q-factor = %.1f %%" % self.q_factor)
 
         return self.q_factor
 
@@ -241,7 +263,8 @@ class focusspot_analysis:
 
         return 0
 
-    def plot_fields_fit(self, save_file=None, xlim=None, ylim=None, clim=None, **kwargs):
+    def plot_fields_fit(self, save_file=None, xlim=None, ylim=None, clim=None,
+                        show_plot=True, **kwargs):
         """
         Method to plot the cropped focus spots with a contour of the 2D-Gaussian fit
         performed a priori.
@@ -255,6 +278,8 @@ class focusspot_analysis:
             Defaults to None.
             clim (tuple, optional): Defines the limits of the colorbar of the 2D-plot.
             Defaults to None.
+            show_plot (boolean, optional): Defines if the plot will of the focus will be shown.
+            Defaults to True.
         """
 
         # Manage *kwargs
@@ -283,7 +308,7 @@ class focusspot_analysis:
                        "FWHM$_x$ = %.1f \u03BCm\n") % (self.popt_fit[3],
                                                        2*self.popt_fit[3],
                                                        2.35*self.popt_fit[3])
-        _ = ax.text(0.07, 0.125, text_legend, horizontalalignment='left', color='white',
+        _ = ax.text(0.07, 0.135, text_legend, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center',
                     transform=ax.transAxes)
 
@@ -294,7 +319,7 @@ class focusspot_analysis:
                                                  2*self.popt_fit[4],
                                                  2.35*self.popt_fit[4],
                                                  self.q_factor)
-        _ = ax.text(0.55, 0.125, text_legend2, horizontalalignment='left', color='white',
+        _ = ax.text(0.55, 0.135, text_legend2, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center', transform=ax.transAxes)
 
         if xlim is not None:
@@ -319,4 +344,6 @@ class focusspot_analysis:
 
         if save_file is not None:
             fig.savefig(save_file, dpi=450, facecolor='white', format='png', bbox_inches='tight')
-        plt.show()
+
+        if show_plot:
+            plt.show()
