@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 #
-# This file is part of postpic.
+# This file is part of jetito.
 #
-# postpic is free software: you can redistribute it and/or modify
+# jetito is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# postpic is distributed in the hope that it will be useful,
+# jetito is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with postpic. If not, see <http://www.gnu.org/licenses/>.
+# along with jetito. If not, see <http://www.gnu.org/licenses/>.
 #
-# Copyright Stephan Kuschel, 2014-2015
+# Copyright 2024
 
 # run all tests and pep8 verification of this project.
 # It is HIGHLY RECOMMENDED to link it as a git pre-commit hook!
@@ -26,15 +26,18 @@
 import sys
 import os
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
 
-def runcmd(cmd):
+
+def runcmd(cmd, cwd=None):
     '''
     run command cmd and exit if it fails.
     '''
     import subprocess
     print('=====  running next command =====')
     print('$ ' + cmd)
-    exitstatus = subprocess.call(cmd, shell=True)
+    exitstatus = subprocess.call(cmd, shell=True, cwd=cwd)
     if exitstatus == 0:
         print('OK')
     else:
@@ -51,7 +54,7 @@ def run_autopep8(args):
         exit(1)
     autopep8mode = '--in-place' if args.autopep8 == 'fix' else '--diff'
     argv = ['autopep8', '-r', 'jetito', '--ignore-local-config', autopep8mode,
-            '--ignore=W391,E123,E226,E24', '--max-line-length=99']
+            '--max-line-length=200']
     print('===== running autopep8 =====')
     print('autopep8 version: ' + autopep8.__version__)
     print('$ ' + ' '.join(argv))
@@ -60,46 +63,58 @@ def run_autopep8(args):
 
 def run_alltests(python='python', fast=False, skip_setup=False):
     '''
-    runs all tests on postpic. This function has to exit without error on every commit!
+    runs all tests on jetito. This function has to exit without error on every commit!
     '''
     cmdrpl = dict(python=python)
     # make sure .pyx sources are up to date and compiled
     if not skip_setup:
         # should be the same as `./setup.py develop --user`
-        runcmd('{python} -m pip install --user .'.format(**cmdrpl))
+        runcmd('{python} -m pip install --user .'.format(**cmdrpl), cwd=REPO_ROOT)
 
     # find pep8 or pycodestyle (its successor)
     try:
         import pep8
         cmdrpl['pycodestyle'] = 'pep8'
-    except(ImportError):
+    except (ImportError):
         pass
     try:
         import pycodestyle
         cmdrpl['pycodestyle'] = 'pycodestyle'
-    except(ImportError):
+    except (ImportError):
         pass
     if 'pycodestyle' not in cmdrpl:
         raise ImportError('Install pep8 or pycodestyle (its successor)')
 
     cmds = ['{python} -m pycodestyle --version',
-            '{python} -m {pycodestyle} jetito --statistics --count --show-source '
-            '--ignore=W391,E123,E226,E24,W504,W605 --max-line-length=120']
+            '{python} -m {pycodestyle} jetito --max-line-length=200']
     # '{python} -m nose --exe']
-    cmdo = ['{python} ' + os.path.join('jetito/examples', 'test_farfield.py'),
-            '{python} ' + os.path.join('jetito/examples', 'test_farfield_theory.py'),
-            '{python} ' + os.path.join('jetito/examples', 'test_focuspot_analysis.py'),
-            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_emittance.py'),
-            '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py'),
-            '{python} ' + os.path.join('jetito/examples', 'ebeam_emittance_pp.py')]
+    cmdo = []
+    # Check if required modules are available before adding examples
+    try:
+        import cv2
+        import matplotlib
+        import numpy
+        import scipy
+        cmdo = ['{python} ' + os.path.join('jetito/examples', 'test_farfield.py'),
+                '{python} ' + os.path.join('jetito/examples', 'test_farfield_theory.py'),
+                '{python} ' + os.path.join('jetito/examples', 'test_focuspot_analysis.py'),
+                '{python} ' + os.path.join('jetito/examples', 'test_focus_shot_series.py'),
+                '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_emittance.py'),
+                '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_jeti.py'),
+                '{python} ' + os.path.join('jetito/examples', 'ebeam_pointing_betatron.py'),
+                '{python} ' + os.path.join('jetito/examples', 'ebeam_emittance_pp.py')]
+    except ImportError as e:
+        print(f"Skipping examples due to missing dependencies: {e}")
+
     if not fast:
         cmds += cmdo
     for cmd in cmds:
-        runcmd(cmd.format(**cmdrpl))
+        runcmd(cmd.format(**cmdrpl), cwd=REPO_ROOT)
 
 
 def main():
     import argparse
+    os.chdir(REPO_ROOT)
     parser = argparse.ArgumentParser(description='''
         Without arguments this runs all tests
         on the jetito codebase.

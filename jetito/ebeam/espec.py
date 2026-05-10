@@ -27,9 +27,67 @@ ml = MultipleLocator(2)
 
 class espec:
 
-    def __init__(self, calib_espec_experimental=3e-7, parent_folder='e-spec', **kwargs):
+    def __init__(self, calib_espec_experimental=3e-7, parent_folder='e-spec',
+                 rotation_angles=(-0.05, 0.1, 0.0),
+                 crop_coords_low=(200, 800, 2200, 1040),
+                 crop_coords_mid=(180, 700, 2200, 990),
+                 crop_coords_high=(180, 700, 2250, 990),
+                 scale_factors=(5.74/5.75, 5.74/5.7),
+                 final_crop_coords=((132, 0, 2000, 240), (180, 23, 1967, 263), (0, 31, 2045, 271)),
+                 calib_px_per_mm=5.74, distance_source_spec_mm=20*5.74, background_level=375,
+                 energy_px_range=(74, 5600), **kwargs):
+        """
+        Constructor for the electron spectrometer analysis class.
+
+        Args:
+            calib_espec_experimental (float): Experimental calibration factor for charge per energy.
+                Defaults to 3e-7.
+            parent_folder (str): Parent folder containing the e-spec images. Defaults to 'e-spec'.
+            rotation_angles (tuple): Rotation angles in degrees for low, mid, and high energy images.
+                Defaults to (-0.05, 0.1, 0.0).
+            crop_coords_low (tuple): Crop coordinates (left, top, right, bottom) for low energy image.
+                Defaults to (200, 800, 2200, 1040).
+            crop_coords_mid (tuple): Crop coordinates for mid energy image.
+                Defaults to (180, 700, 2200, 990).
+            crop_coords_high (tuple): Crop coordinates for high energy image.
+                Defaults to (180, 700, 2250, 990).
+            scale_factors (tuple): Scaling factors for mid and high energy images.
+                Defaults to (5.74/5.75, 5.74/5.7).
+            final_crop_coords (tuple): Final crop coordinates for joining images.
+                Defaults to ((132, 0, 2000, 240), (180, 23, 1967, 263), (0, 31, 2045, 271)).
+            calib_px_per_mm (float): Pixel to mm calibration. Defaults to 5.74.
+            distance_source_spec_mm (float): Distance from source to spectrometer in mm.
+                Defaults to 20*5.74.
+            background_level (int): Background level to subtract. Defaults to 375.
+            energy_px_range (tuple): Pixel range for energy calibration (min_px, max_px).
+                Defaults to (74, 5600).
+        """
+        # Validate input parameters
+        if len(rotation_angles) != 3:
+            raise ValueError("rotation_angles must be a tuple of 3 values (low, mid, high)")
+        if len(scale_factors) != 2:
+            raise ValueError("scale_factors must be a tuple of 2 values (mid, high)")
+        if len(final_crop_coords) != 3:
+            raise ValueError("final_crop_coords must be a tuple of 3 coordinate tuples")
+        if len(energy_px_range) != 2:
+            raise ValueError("energy_px_range must be a tuple of 2 values (min_px, max_px)")
+
         self.calib_espec_experimental = calib_espec_experimental
         self.parent_folder = parent_folder
+
+        # Image processing parameters
+        self.rotation_angles = rotation_angles
+        self.crop_coords_low = crop_coords_low
+        self.crop_coords_mid = crop_coords_mid
+        self.crop_coords_high = crop_coords_high
+        self.scale_factors = scale_factors
+        self.final_crop_coords = final_crop_coords
+
+        # Calibration parameters
+        self.calib_px_per_mm = calib_px_per_mm
+        self.distance_source_spec_mm = distance_source_spec_mm
+        self.background_level = background_level
+        self.energy_px_range = energy_px_range
 
         if 'set_folder' not in kwargs:
             self.set_folder = None
@@ -37,9 +95,19 @@ class espec:
             self.set_folder = kwargs['set_folder']
             kwargs.pop('set_folder', None)
 
-    def getEspec(self, shotnumber, calib_file="../ebeam/espec_calib_files/",
-                 **kwargs):
+    def getEspec(self, shotnumber, calib_file="../ebeam/espec_calib_files/", **kwargs):
+        """
+        Process electron spectrometer images and generate energy spectrum.
 
+        Args:
+            shotnumber (int or str): Shot number to analyze.
+            calib_file (str): Path to calibration file directory.
+                Defaults to "../ebeam/espec_calib_files/".
+            **kwargs: Additional keyword arguments for verbose output and saving.
+
+        Returns:
+            tuple: (energy_axis, spectrum) where energy_axis is in MeV and spectrum is dQ/dE.
+        """
         # savename = date+set_pic+'_'+picturenumber
 
         if 'verbose' not in kwargs:
@@ -84,8 +152,8 @@ class espec:
 
         # Post-processing low energy image
         im1 = copy.copy(image1)
-        im1 = im1.rotate(-0.05, resample=Image.Resampling.BICUBIC)
-        im1_crop = im1.crop((200, 800, 2200, 1040))
+        im1 = im1.rotate(self.rotation_angles[0], resample=Image.Resampling.BICUBIC)
+        im1_crop = im1.crop(self.crop_coords_low)
         img_array = np.array(im1_crop)
 
         if save:
@@ -97,9 +165,9 @@ class espec:
 
         # Post-processing mid-energy image (center energy)
         im2 = copy.copy(image2)
-        im2 = im2.rotate(0.1, resample=Image.Resampling.BICUBIC)
-        im2_crop = im2.crop((180, 700, 2200, 990))
-        scale2 = 5.74/5.75
+        im2 = im2.rotate(self.rotation_angles[1], resample=Image.Resampling.BICUBIC)
+        im2_crop = im2.crop(self.crop_coords_mid)
+        scale2 = self.scale_factors[0]
         oldsize_2 = im2_crop.size
         im2_crop = im2_crop.resize((int(oldsize_2[0] * scale2), int(oldsize_2[1] * scale2)))
         img_array = np.array(im2_crop)
@@ -113,8 +181,8 @@ class espec:
 
         # Post-processing high-energy image
         im3 = copy.copy(image3)
-        im3_crop = im3.crop((180, 700, 2250, 990))
-        scale3 = 5.74/5.7
+        im3_crop = im3.crop(self.crop_coords_high)
+        scale3 = self.scale_factors[1]
         oldsize_3 = im3_crop.size
         im3_crop = im3_crop.resize((int(oldsize_3[0] * scale3), int(oldsize_3[1] * scale3)))
         img_array = np.array(im3_crop)
@@ -127,9 +195,9 @@ class espec:
             plt.show()
 
         # Crop images to make them fit together when joined
-        im1_crop = im1_crop.crop((132, 0, 2000, 240))
-        im2_crop = im2_crop.crop((180, 23, 1967, 263))
-        im3_crop = im3_crop.crop((0, 31, 2045, 271))
+        im1_crop = im1_crop.crop(self.final_crop_coords[0])
+        im2_crop = im2_crop.crop(self.final_crop_coords[1])
+        im3_crop = im3_crop.crop(self.final_crop_coords[2])
 
         # Join the images
         new_all = Image.new('I', (im1_crop.size[0] + im2_crop.size[0] + im3_crop.size[0], im1_crop.size[1]))
@@ -141,18 +209,16 @@ class espec:
         img_array = np.array(new_all)
 
         # distance_sorce_spec = 1.500
-        calib_px_per_mm = 5.74
-        distance_sorce_spec = 20*calib_px_per_mm
-        background = 375
+        distance_sorce_spec = self.distance_source_spec_mm
 
         if save:
             fig, axes1 = plt.subplots(1, 1, figsize=(10, 5))
             axes = iter(np.ravel(axes1))
             ax = next(axes)
-            ax.imshow(img_array, extent=((np.shape(img_array)[1] + distance_sorce_spec) / calib_px_per_mm,
-                                         + distance_sorce_spec / calib_px_per_mm,
-                                         - im3_crop.size[1] / 2 / calib_px_per_mm,
-                                         im3_crop.size[1] / 2 / calib_px_per_mm))
+            ax.imshow(img_array, extent=((np.shape(img_array)[1] + distance_sorce_spec) / self.calib_px_per_mm,
+                                         + distance_sorce_spec / self.calib_px_per_mm,
+                                         - im3_crop.size[1] / 2 / self.calib_px_per_mm,
+                                         im3_crop.size[1] / 2 / self.calib_px_per_mm))
             ax.set_xlabel('Deflection (mm)', fontsize=12)
             ax.set_ylabel('y (mm)', fontsize=12)
             ax.tick_params(axis='y', labelsize=8)
@@ -160,7 +226,7 @@ class espec:
             save_espec_energy = save_folder + str(shotnumber) + "_e-spec_energy.png"
             fig.savefig(save_espec_energy, dpi=450, facecolor='white', format='png', bbox_inches='tight')
             plt.show()
-            #new_all.save("calib_image.tiff")
+            # new_all.save("calib_image.tiff")
 
         # Rescale the deflection axis to energy according to the calibraiton
         # of the spectrometer. The calibration file is located in the same folder
@@ -173,8 +239,8 @@ class espec:
         pxlatEnergy = Energie_kalib[0]
         Energy = Energie_kalib[1]
 
-        max_px = 74
-        min_px = 5600
+        max_px = self.energy_px_range[0]
+        min_px = self.energy_px_range[1]
         Energyatpxl_inter = interp1d(pxlatEnergy, Energy, kind='cubic')
         ablenkung_in_pxl = np.linspace(max_px, min_px, min_px - max_px)
 
@@ -214,3 +280,5 @@ class espec:
             fig.savefig(save_linspec_energy, dpi=450, facecolor='white', format='png', bbox_inches='tight')
 
         plt.show()
+
+        return x_achse, -1 * lin_spec[max_px:min_px] / dE_per_dpxl * self.calib_espec_experimental

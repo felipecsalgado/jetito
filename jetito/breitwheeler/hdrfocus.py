@@ -45,9 +45,11 @@ plt.rc('legend', fontsize=16)            # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 ml = MultipleLocator(2)
 
-#%%
+# %%
+
+
 class HDR():
-    def __init__(self, datafolder, outputfolder, filter = [0.496, 0.2135, 0.1285, 0.1065]):
+    def __init__(self, datafolder, outputfolder, filter=[0.496, 0.2135, 0.1285, 0.1065]):
         """Constructor of the HDR focus images analysis from the CALA
         facility.
 
@@ -96,9 +98,9 @@ class HDR():
             verbose = kwargs['verbose']
             kwargs.pop('verbose', None)
 
-        #self.number_of_images_per_exposure_setting = 11
-        #self.sets = ['_2_31_F1111_focus','_4_31_F1110_focus', '_6_31_F1011_focus', '_8_31_F1001_focus', '_10_31_F1000_focus', '_12_31_F0001_focus', '_14_31_F0000_focus']
-        #self.sets_BG = ['_1_31_D_focus_', '_3_31_D_focus_', '_5_31_D_focus_', '_7_31_D_focus_', '_9_31_D_focus_', '_11_31_D_focus_', '_13_31_D_focus_', '_15_31_D_focus_']
+        # self.number_of_images_per_exposure_setting = 11
+        # self.sets = ['_2_31_F1111_focus','_4_31_F1110_focus', '_6_31_F1011_focus', '_8_31_F1001_focus', '_10_31_F1000_focus', '_12_31_F0001_focus', '_14_31_F0000_focus']
+        # self.sets_BG = ['_1_31_D_focus_', '_3_31_D_focus_', '_5_31_D_focus_', '_7_31_D_focus_', '_9_31_D_focus_', '_11_31_D_focus_', '_13_31_D_focus_', '_15_31_D_focus_']
         if not isinstance(number_of_images_per_exposure_setting, int):
             raise ValueError("Number_of_images_per_exposure_setting argument is not an int")
 
@@ -119,7 +121,7 @@ class HDR():
         self.preliminary_minval_maxval_minloc_maxloc = []
         self.minval_maxval_minloc_maxloc = []
         self.img_cropped = []
-        self.blur_parameters = [20,20,30,35,45,65,120]
+        self.blur_parameters = [20, 20, 30, 35, 45, 65, 120]
         self.img_BG_cropped = []
         self.hdr_image = []
         self.translation = []
@@ -131,13 +133,13 @@ class HDR():
         self.img_BG_cropped_final = []
         self.match_templates = []
         self.Filter_Setting = np.array([1,
-               self.Filter[0],
-               self.Filter[3],
-               self.Filter[0]*self.Filter[3],
-               self.Filter[0]*self.Filter[1]*self.Filter[3],
-               self.Filter[1]*self.Filter[2]*self.Filter[3],
-               self.Filter[0]*self.Filter[1]*self.Filter[2]*self.Filter[3]
-               ], dtype=np.float32)
+                                        self.Filter[0],
+                                        self.Filter[3],
+                                        self.Filter[0]*self.Filter[3],
+                                        self.Filter[0]*self.Filter[1]*self.Filter[3],
+                                        self.Filter[1]*self.Filter[2]*self.Filter[3],
+                                        self.Filter[0]*self.Filter[1]*self.Filter[2]*self.Filter[3]
+                                        ], dtype=np.float32)
         self.threshold = 0.8
         self.loc = []
         self.final_crop = []
@@ -152,13 +154,13 @@ class HDR():
                     print("Looking at images at: " + str(self.datafolder))
 
                 # Create paths for the data results
-                Path(os.path.join(self.outputfolder,"analysis")).mkdir(parents=True, exist_ok=True)
-                Path(os.path.join(self.outputfolder,"debug")).mkdir(parents=True, exist_ok=True)
+                Path(os.path.join(self.outputfolder, "analysis")).mkdir(parents=True, exist_ok=True)
+                Path(os.path.join(self.outputfolder, "debug")).mkdir(parents=True, exist_ok=True)
             else:
                 raise ValueError("Data folder path is incorrect!")
 
             # Load images into a dictionary and substract Background
-            self.img_dict = {} # dict with exposure setting as key
+            self.img_dict = {}  # dict with exposure setting as key
             self.img_list = []
             self.img_list_BG = []
 
@@ -215,10 +217,10 @@ class HDR():
             self.goalx = int(self.img_dict[0][0].shape[0]/2)
             self.goaly = int(self.img_dict[0][0].shape[1]/2)
 
-            self.img_cropped_dict = {} # define dict for averaged images
+            self.img_cropped_dict = {}  # define dict for averaged images
             self.img_cropped_list = []
 
-            self.match_templates_dict = {} # define list for the templates of the cross correlation later (first image for each expsure which is cropped more)
+            self.match_templates_dict = {}  # define list for the templates of the cross correlation later (first image for each expsure which is cropped more)
 
             # predefine dictionary with empty lists for the cropped images (makes the program faster)
             for i in range(len(self.sets)):
@@ -248,7 +250,7 @@ class HDR():
                     # build csv coordinate path
                     coordinates_path = os.path.join(self.outputfolder, "analysis", "center_of_focus.csv")
 
-                    if i<3:
+                    if i < 3:
                         # blur images to get accurate maximum position
                         self.img_blurred = scipy_ndimage.median_filter(self.img_dict[i][j],
                                                                        self.blur_parameters[i])
@@ -256,7 +258,7 @@ class HDR():
                         self.preliminary_minval_maxval_minloc_maxloc = cv2.minMaxLoc(self.img_blurred)
 
                         # Crop images around center
-                        #/self.number_of_images_per_exposure_setting
+                        # /self.number_of_images_per_exposure_setting
                         self.img_cropped_dict[i][j] = self.img_dict[i][j][
                             int(self.preliminary_minval_maxval_minloc_maxloc[3][1])-self.crop_range:
                             int(self.preliminary_minval_maxval_minloc_maxloc[3][1])+self.crop_range,
@@ -302,11 +304,11 @@ class HDR():
 
                         # save coordinates in csv
                         pd.DataFrame([[str(i), str(j), str(self.maxlocsy_mean),
-                                        str(self.maxlocsx_mean)]]).to_csv(coordinates_path,
-                                                                          header=False,
-                                                                          index=False,
-                                                                          sep='\t',
-                                                                          mode="a")
+                                       str(self.maxlocsx_mean)]]).to_csv(coordinates_path,
+                                                                         header=False,
+                                                                         index=False,
+                                                                         sep='\t',
+                                                                         mode="a")
             if verbose:
                 print("\t> All immages were cropped around center")
 
@@ -369,7 +371,7 @@ class HDR():
                     # Crop image around center
                     self.corrected_image = np.roll(self.img_cropped_dict[i][j],
                                                    self.deviation_from_optimum,
-                                                   (0,1))
+                                                   (0, 1))
 
                     self.final_crop.append(self.corrected_image / self.number_of_images_per_exposure_setting)
 
@@ -409,7 +411,6 @@ class HDR():
             if verbose:
                 print("\t> End of image averaging")
 
-
             # Cross correlate the averaged images
             if verbose:
                 print("")
@@ -440,12 +441,12 @@ class HDR():
             for i in range(len(self.sets)-1):
                 self.result = match_template(self.averaged_image[i+1],
                                              self.averaged_image[i],
-                                             cv2.TM_CCORR_NORMED)  #TM_CCORR_NORMED,TM_CCOEFF_NORMED
+                                             cv2.TM_CCORR_NORMED)  # TM_CCORR_NORMED,TM_CCOEFF_NORMED
 
                 self.ij = np.unravel_index(np.argmax(self.result),
                                            self.result.shape)
 
-                self.x, self.y = self.ij[::-1] #peaks in the output of match_template correspond to the origin (i.e. top-left corner) of the template
+                self.x, self.y = self.ij[::-1]  # peaks in the output of match_template correspond to the origin (i.e. top-left corner) of the template
                 self.deviation_from_optimum = (self.start_coordinates[0] - self.y,
                                                self.start_coordinates[1] - self.x)
 
@@ -457,13 +458,11 @@ class HDR():
                 self.final_averaged_cropped_images.append(self.corrected_image)
                 self.averaged_image[i+1] = self.corrected_image
 
-
             for i in range(len(self.sets)):
                 img_avg_path_save = os.path.join(self.outputfolder, "debug", "final_averaged_cropped_image_" +
                                                  str(i) + "_" + ".png")
                 cv2.imwrite(img_avg_path_save,
                             self.final_averaged_cropped_images[i].astype(np.uint16))
-
 
             # Replace saturated region by data of lesser exposed image
             if verbose:
@@ -497,24 +496,21 @@ class HDR():
                 cv2.imwrite(img_saturated_path_save,
                             self.returnSaturatedArea(self.img_cropped_averaged_sorted[i]))
 
-
-
             for i in range(len(self.sets)-1):
-                self.hdr_image_step.append(self.hdr_image_step[i]*self.returnNonSaturatedArea(self.img_cropped_averaged_sorted[i])+
-                  self.returnSaturatedArea(self.img_cropped_averaged_sorted[i])*self.img_cropped_averaged_sorted[i+1]/self.Filter_Setting[i+1])
+                self.hdr_image_step.append(self.hdr_image_step[i]*self.returnNonSaturatedArea(self.img_cropped_averaged_sorted[i]) +
+                                           self.returnSaturatedArea(self.img_cropped_averaged_sorted[i])*self.img_cropped_averaged_sorted[i+1]/self.Filter_Setting[i+1])
 
                 if verbose:
-                    print("\t> maximum: ",np.max(self.hdr_image_step[i]))
-                    print("\t> minimum: ",np.min(self.hdr_image_step[i]))
+                    print("\t> maximum: ", np.max(self.hdr_image_step[i]))
+                    print("\t> minimum: ", np.min(self.hdr_image_step[i]))
                     print("\t> Saturated image of most exposed image replaced by data from next lesser exposed image\n")
-
 
             self.hdr_image = self.hdr_image_step[-1]
 
             output_path_hdr_csv = os.path.join(self.outputfolder, "analysis", "hdr_image.csv")
             np.savetxt(output_path_hdr_csv,
                        self.hdr_image,
-                       delimiter = ",")
+                       delimiter=",")
 
             for i in range(len(self.final_crop)):
                 img_final_crop_path_save = os.path.join(self.outputfolder, "Atlas_finalcrop_" +
@@ -545,16 +541,16 @@ class HDR():
             self.hdr_image = np.genfromtxt(file, delimiter=',')
             if verbose:
                 print("Reminder: Next step, convert the counts units from the HDR image to W/cm2.")
-        except:
+        except Exception:
             self.hdr_image = None
             raise ValueError("Error in loading the file")
 
     def convert_counts2physics(self,
-                               diameterBeam = 27,
-                               focalLengthOap = 1000,
+                               diameterBeam=27,
+                               focalLengthOap=1000,
                                E_laser=18,
                                t_laser=30e-15,
-                               lambda0=0.8, #micron
+                               lambda0=0.8,  # micron
                                aperture=0.1,
                                **kwargs):
         """Convert the units from the HDR image, originally in counts, to w/cm^2 (physical units).
@@ -594,7 +590,7 @@ class HDR():
 
         OverThreshold = np.where(self.hdr_image > maxMyCutOut * 0.5, 1, 0)
         anzahlPixel = np.sum(OverThreshold)
-        myFiltered = self.hdr_image#scipy_ndimage.median_filter(myCutOut,4)
+        myFiltered = self.hdr_image  # scipy_ndimage.median_filter(myCutOut,4)
         # myPic = np.log10(myFiltered)
 
         sumPx = np.sum(myFiltered)
@@ -603,11 +599,11 @@ class HDR():
 
         P0 = 2 * np.sqrt(2 * np.log(2)) * E_laser / np.sqrt(2 * np.pi) / t_laser
 
-        # magnification measurement: diffraction from 'grating' (graph paper) with 10mm slit distance: 
+        # magnification measurement: diffraction from 'grating' (graph paper) with 10mm slit distance:
         # measured distance on focus cam between 0th and 1st order diffraction peaks: 727px
-        slit_dist = 10e3 # micron
-        self.dx = focalLengthOap * np.tan(np.arcsin(lambda0 / slit_dist)) * 1e4 / 727 # pixel size (micron)
-        # similar result from measuring 1/e width of 10micron pinhole image on focus cam --> 9 pixel diameter --> 10micron/9=1.1micron); 
+        slit_dist = 10e3  # micron
+        self.dx = focalLengthOap * np.tan(np.arcsin(lambda0 / slit_dist)) * 1e4 / 727  # pixel size (micron)
+        # similar result from measuring 1/e width of 10micron pinhole image on focus cam --> 9 pixel diameter --> 10micron/9=1.1micron);
         # IDS camera UI 5244-M: 5.3micron pixel size: magnification therefore 5.3micron/1.1micron = 4.8 (close to nominal magnification of 5x Mitutoyo)
         self.dy = self.dx
         Flaeche = anzahlPixel * self.dx * self.dx
@@ -621,7 +617,7 @@ class HDR():
         if verbose:
             print("a0 peak = %.2f" % (self.a0_max))
 
-        lambda0_2 = lambda0 * 1e-4 # Convert um in cm
+        lambda0_2 = lambda0 * 1e-4  # Convert um in cm
         I_max_ideal_Stefan = (np.pi * P0) / (4 * lambda0_2**2 * FnumberOap**2)
 
         Strehl = I_max / I_max_ideal_Stefan
@@ -649,7 +645,7 @@ class HDR():
 
         x_mm = np.arange(-self.hdr_image.shape[1]/2, self.hdr_image.shape[1]/2, 1) * self.dx
         y_mm = np.arange(-self.hdr_image.shape[0]/2, self.hdr_image.shape[0]/2, 1) * self.dy
-        x, y = np.meshgrid(x_mm,y_mm)
+        x, y = np.meshgrid(x_mm, y_mm)
 
         # Plot
         fig, axes1 = plt.subplots(1, 1, figsize=(5, 5))
@@ -660,12 +656,12 @@ class HDR():
         FS = 20
         lev = np.logspace(15, 20, 1000)
         im = ax.contourf(x, y, self.I_distr,
-                         cmap = color_map, norm = LogNorm(), levels = lev)#,zorder=-9)
-        #plt.gca().set_rasterization_zorder(-1)
+                         cmap=color_map, norm=LogNorm(), levels=lev)  # ,zorder=-9)
+        # plt.gca().set_rasterization_zorder(-1)
         ax.set_aspect(1)
         ax.set_xlabel('x [\u03BCm]')
         ax.set_ylabel('y [\u03BCm]')
-        #ax2.tick_params(labelsize=FS)
+        # ax2.tick_params(labelsize=FS)
         ax.set_xlim(xlim[0], xlim[1])
         ax.set_ylim(ylim[0], ylim[1])
 
@@ -680,23 +676,23 @@ class HDR():
         cbar_ax = fig.add_axes([0.92, 0.11, 0.03, 0.77])
         cbar = fig.colorbar(im, cax=cbar_ax)
 
-        #cbar = fig.colorbar(cf, cax=ax)
-        #cbar.ax.set_yticklabels(['16', '17', '18', '19','20'])
+        # cbar = fig.colorbar(cf, cax=ax)
+        # cbar.ax.set_yticklabels(['16', '17', '18', '19','20'])
         cbar.set_label(r"Intensity [W/cm$^2$]")
         d = np.arange(1, 10)
-        D = np.append(d * np.logspace(15, 15, num = 9), d * np.logspace(16, 16, num = 9))
-        D = np.append(D, d * np.logspace(17, 17, num = 9))
-        D = np.append(D, d * np.logspace(18, 18, num = 9))
-        D = np.append(D, d * np.logspace(19, 19, num = 9))
+        D = np.append(d * np.logspace(15, 15, num=9), d * np.logspace(16, 16, num=9))
+        D = np.append(D, d * np.logspace(17, 17, num=9))
+        D = np.append(D, d * np.logspace(18, 18, num=9))
+        D = np.append(D, d * np.logspace(19, 19, num=9))
         D = np.append(D, 1e20)
         cbar.set_ticks(D)
-        cbar.ax.tick_params(labelsize = FS)
-        #for ax in {ax1, ax2}:
+        cbar.ax.tick_params(labelsize=FS)
+        # for ax in {ax1, ax2}:
         #    ax.set_xlabel(r'$x$')
         #    ax.set_ylabel(r'$y$')
         #    ax.set_aspect('auto')
-        #fig.tight_layout()
-        #plt.savefig(os.path.join(argin,"analysis","20231018_focus_plot.pdf"), facecolor='white', transparent=False, dpi=300)
-        #plt.savefig(os.path.join(argin,"analysis","20231018_focus_plot.png"), facecolor='white', transparent=False, dpi=300)
-        #plt.savefig("Comparisons/SG6_beam_Triangules_Mask_a=50_b=150_R=300.png", dpi=400, facecolor='w', edgecolor='w', bbox_inches='tight')
+        # fig.tight_layout()
+        # plt.savefig(os.path.join(argin,"analysis","20231018_focus_plot.pdf"), facecolor='white', transparent=False, dpi=300)
+        # plt.savefig(os.path.join(argin,"analysis","20231018_focus_plot.png"), facecolor='white', transparent=False, dpi=300)
+        # plt.savefig("Comparisons/SG6_beam_Triangules_Mask_a=50_b=150_R=300.png", dpi=400, facecolor='w', edgecolor='w', bbox_inches='tight')
         plt.show()

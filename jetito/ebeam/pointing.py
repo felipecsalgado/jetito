@@ -27,18 +27,18 @@ ml = MultipleLocator(2)
 
 class pointing_analysis:
 
-    def __init__(self, filename, rescale=False, image_calib=18.3e-3, d_target_screen=1.45,
+    def __init__(self, filename, rescale=False, image_calib=18.5e-3, d_target_screen=1.45,
                  **kwargs):
         """
-        Contructor of the pointing_analysis class.
+        Constructor of the pointing_analysis class.
 
         Args:
-            filename (string): Path and file name of the near-field image to calculate the
-            far-field distribution.
-            image_calib (double, optional): Calibration of the near-field image in units
-            of length/pixel (typical: mm/pixels). Defaults to 18.5e-3.
-            d_target_screen (double, optional): Distance from the target to the screen
-            where the pointing image was recorded (typical: meters). Defaults to 1.45.
+            filename (string): Path and file name of the pointing image to be analyzed.
+            rescale (bool, optional): Whether to rescale PNG images. Defaults to False.
+            image_calib (float, optional): Calibration of the image in units
+                of length/pixel (typical: mm/pixels). Defaults to 18.5e-3.
+            d_target_screen (float, optional): Distance from the target to the screen
+                where the pointing image was recorded (typical: meters). Defaults to 1.45.
         """
 
         if 'verbose' not in kwargs:
@@ -166,7 +166,9 @@ class pointing_analysis:
 
         Args:
             init_guess (tuple, optional): Initial guess parameter for the fit function.
-            (amplitude, sigma_x, sigma_y, theta, offset). Defaults to (100, 10, 10, 0, 0).
+                (amplitude, sigma_x, sigma_y, theta, offset). Defaults to (500, 2.214, 3.7, 385, 175).
+            output (bool, optional): Whether to print detailed fit results. Defaults to False.
+            verbose (bool, optional): Whether to print progress information. Defaults to False.
 
         Returns:
             tuple: popt and pcov of the 2D-Gaussian fit
@@ -194,10 +196,10 @@ class pointing_analysis:
         try:
             # Get the max for initial guess
             sum_vertical = np.sum(self.image_crop, axis=0)
-            idx_max_vertical = np.argmax(sum_vertical)
+            idx_max_x = np.argmax(sum_vertical)
 
             sum_horizontal = np.sum(self.image_crop, axis=1)
-            idx_max_horizontal = np.argmax(sum_horizontal)
+            idx_max_y = np.argmax(sum_horizontal)
 
             # Used for debugging
             # plt.pcolormesh(self.XX, self.YY, self.image_crop,  vmin=0, vmax=500)
@@ -205,12 +207,12 @@ class pointing_analysis:
             # plt.savefig("results/ebeam/pointing/cropped.png", forecolor="white")
 
             if verbose:
-                print("Maximum at: x = %.3f um and y = %.3f um" % (self.XX[idx_max_horizontal,
-                                                                           idx_max_vertical],
-                                                                   self.YY[idx_max_horizontal,
-                                                                           idx_max_vertical]))
+                print("Maximum at: x = %.3f um and y = %.3f um" % (self.XX[idx_max_y,
+                                                                           idx_max_x],
+                                                                   self.YY[idx_max_y,
+                                                                           idx_max_x]))
             # Get the centerr by fitting a 2D Gaussian
-            # initial_guess = (25e3,idx_max_vertical,idx_max_horizontal,20,20,0,0, 0)
+            # initial_guess = (25e3,idx_max_y,idx_max_x,20,20,0,0, 0)
             # amplitude, xo, yo, sigma_x, sigma_y, theta, offset
 
             if verbose:
@@ -221,10 +223,10 @@ class pointing_analysis:
                                                     YY=self.YY,
                                                     ZZ=self.image_crop,
                                                     initial_guess=(init_guess[0],
-                                                                   self.XX[idx_max_horizontal,
-                                                                           idx_max_vertical],
-                                                                   self.YY[idx_max_horizontal,
-                                                                           idx_max_vertical],
+                                                                   self.XX[idx_max_y,
+                                                                           idx_max_x],
+                                                                   self.YY[idx_max_y,
+                                                                           idx_max_x],
                                                                    init_guess[1],
                                                                    init_guess[2],
                                                                    init_guess[3],
@@ -260,10 +262,10 @@ class pointing_analysis:
             self.div_major_rms = np.arctan(self.major_rms * 1e-3 / self.dist_target_screen)
             self.div_minor_rms = np.arctan(self.minor_rms * 1e-3 / self.dist_target_screen)
 
-        except (RuntimeError, TypeError, NameError):
-            print("Error while calculating the focus parameters")
-            self.popt_fit = -1
-            self.pcov_fit = -1
+        except Exception as e:
+            print(f"Error while calculating the focus parameters: {e}")
+            self.popt_fit = np.full(7, np.nan)
+            self.pcov_fit = None
 
         return self.popt_fit, self.pcov_fit
 
@@ -282,11 +284,11 @@ class pointing_analysis:
             verbose = kwargs['verbose']
             kwargs.pop('verbose', None)
 
-        #self.div_fwhm_x = np.arctan(self.major_fwhm/2 * 1e-3 / self.dist_target_screen)
-        #self.div_major_y = np.arctan(self.major_y/2 * 1e-3 / self.dist_target_screen)
+        # self.div_fwhm_x = np.arctan(self.major_fwhm/2 * 1e-3 / self.dist_target_screen)
+        # self.div_major_y = np.arctan(self.major_y/2 * 1e-3 / self.dist_target_screen)
 
-        #self.div_sigma_x = np.arctan(self.sigma_x * 1e-3 / self.dist_target_screen)
-        #self.div_sigma_y = np.arctan(self.sigma_y * 1e-3 / self.dist_target_screen)
+        # self.div_sigma_x = np.arctan(self.sigma_x * 1e-3 / self.dist_target_screen)
+        # self.div_sigma_y = np.arctan(self.sigma_y * 1e-3 / self.dist_target_screen)
 
         if verbose:
             print("")
@@ -294,8 +296,8 @@ class pointing_analysis:
             print("RMS Divergence major_sigma = %.3f mrad" % (self.div_major_rms * 1e3))
             print("RMS Divergence minor_sigma = %.3f mrad" % (self.div_minor_rms * 1e3))
 
-            print("Half-angle divergence major FWHM = %.3f mrad" % (self.div_major_fwhm * 1e3))
-            print("Half-angle divergence minor FWHM = %.3f mrad" % (self.div_minor_fwhm * 1e3))
+            print("Full-angle divergence major FWHM = %.3f mrad" % (self.div_major_fwhm * 1e3))
+            print("Full-angle divergence minor FWHM = %.3f mrad" % (self.div_minor_fwhm * 1e3))
 
         return self.div_major_fwhm, self.div_minor_fwhm, self.div_major_rms, self.div_minor_rms
 
@@ -325,9 +327,7 @@ class pointing_analysis:
         ax = next(axes)
         im = ax.pcolormesh(self.XX, self.YY, self.image_crop, **kwargs)
 
-        Z_FWHM = gf.twoD_Gaussian((self.popt_fit[1] + self.popt_fit[3]*1.355/2.,
-                                   self.popt_fit[2] + self.popt_fit[4]*1.355/2.),
-                                  *self.popt_fit)
+        Z_FWHM = (self.popt_fit[0] / 2.0) + self.popt_fit[-1]
         # print(Z_FWHM)
 
         data_fitted = gf.twoD_Gaussian((self.XX, self.YY), *self.popt_fit)
@@ -337,26 +337,26 @@ class pointing_analysis:
                    levels=[Z_FWHM], colors=['black'])
 
         # Text legend 1: x-parameters
-        #text_legend = ("$\sigma_x$ = %.1f mm\n" +
+        # text_legend = ("$\sigma_x$ = %.1f mm\n" +
         #               "$2\sigma_x$ = %.1f mm\n" +
         #               "FWHM$_x$ = %.1f mm\n" +
         #               "rms div_x = %.2f mrad") % (self.popt_fit[3],
         #                                            2*self.popt_fit[3],
         #                                            2.35*self.popt_fit[3],
         #                                            self.div_sigma_x*1e3)
-        #_ = ax.text(0.02, 0.125, text_legend, horizontalalignment='left', color='white',
+        # _ = ax.text(0.02, 0.125, text_legend, horizontalalignment='left', color='white',
         #            fontsize=8, weight='bold', verticalalignment='center',
         #            transform=ax.transAxes)
 
         # Text legend 2: y-parameters
-        #text_legend2 = ("$\sigma_y$ = %.1f mm\n" +
+        # text_legend2 = ("$\sigma_y$ = %.1f mm\n" +
         #                "$2\sigma_y$ = %.1f mm\n" +
         #                "FWHM$_y$ = %.1f mm\n" +
         #                "rms div_y = %.2f mrad") % (self.popt_fit[4],
         #                                             2*self.popt_fit[4],
         #                                             2.35*self.popt_fit[4],
         #                                             self.div_sigma_y*1e3)
-        #_ = ax.text(0.6, 0.125, text_legend2, horizontalalignment='left', color='white',
+        # _ = ax.text(0.6, 0.125, text_legend2, horizontalalignment='left', color='white',
         #            fontsize=8, weight='bold', verticalalignment='center',
         #            transform=ax.transAxes)
 
@@ -391,7 +391,7 @@ class pointing_analysis:
 
         if save_file is not None:
             fig.savefig(save_file, dpi=450, facecolor='white', format='png', bbox_inches='tight')
-        plt.show()
+        # plt.show()
 
     def calculate_charge(self,
                          screen_yield=8.25e9,

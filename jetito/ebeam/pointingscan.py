@@ -27,9 +27,13 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 ml = MultipleLocator(2)
 
+
 class pointingscan:
     """
-    Provides an easy way to perform focus scan analysis for a set of images of the same dataset.
+    Provides an easy way to perform pointing scan analysis for a set of images of the same dataset.
+
+    This class analyzes multiple pointing images to extract beam parameters such as divergence,
+    charge, and pointing stability across a scan.
     """
 
     def __init__(self, files_list, rescale=True, image_calib=0.0223, d_target_screen=1.03,
@@ -42,9 +46,40 @@ class pointingscan:
                  lens_fnumber=8,
                  dist_cam_screen=43e-2,
                  filename_save="e-pointing/results/",
-                 im_xlim=(-2,2),
-                 im_ylim=(-2.5,2.5),
+                 im_xlim=(-2, 2),
+                 im_ylim=(-2.5, 2.5),
                  im_clim=(0, 4e3)):
+        """
+        Initialize the pointing scan analysis.
+
+        Args:
+            files_list (list): List of file paths to pointing images.
+            rescale (bool, optional): Whether to rescale PNG images. Defaults to True.
+            image_calib (float, optional): Spatial calibration in mm/pixel. Defaults to 0.0223.
+            d_target_screen (float, optional): Distance from target to screen in meters. Defaults to 1.03.
+            im_left (int, optional): Left crop boundary in pixels. Defaults to 700.
+            im_right (int, optional): Right crop boundary in pixels. Defaults to 1210.
+            im_top (int, optional): Top crop boundary in pixels. Defaults to 355.
+            im_bottom (int, optional): Bottom crop boundary in pixels. Defaults to 830.
+            im_save_file (str, optional): Path to save cropped images. Defaults to None.
+            fit_p0 (tuple, optional): Initial guess for Gaussian fit. Defaults to (5e3, 0.7, 0.5, 0, 50).
+            screen_yield (float, optional): Screen yield in photons/electron. Defaults to 7.61e9.
+            camera_calib (float, optional): Camera calibration in counts/photon. Defaults to 1/0.092.
+            transmission_loss (float, optional): Optical transmission loss. Defaults to 0.97**3.
+            lens_focal_length (float, optional): Lens focal length in mm. Defaults to 108.
+            lens_fnumber (float, optional): Lens f-number. Defaults to 8.
+            dist_cam_screen (float, optional): Distance from camera to screen in meters. Defaults to 43e-2.
+            filename_save (str, optional): Output directory for results. Defaults to "e-pointing/results/".
+            im_xlim (tuple, optional): Plot x-axis limits. Defaults to (-2, 2).
+            im_ylim (tuple, optional): Plot y-axis limits. Defaults to (-2.5, 2.5).
+            im_clim (tuple, optional): Plot colorbar limits. Defaults to (0, 4e3).
+        """
+
+        # Validate inputs
+        if not isinstance(files_list, list) or len(files_list) == 0:
+            raise ValueError("files_list must be a non-empty list of file paths")
+        if len(fit_p0) != 5:
+            raise ValueError("fit_p0 must be a tuple of 5 initial guess parameters")
 
         # Initialization
         self.files_list = files_list
@@ -70,7 +105,7 @@ class pointingscan:
         self.lens_fnumber = lens_fnumber
         self.dist_cam_screen = dist_cam_screen
 
-        #Plot files
+        # Plot files
         self.filename_save = filename_save
         self.im_xlim = im_xlim
         self.im_ylim = im_ylim
@@ -88,13 +123,12 @@ class pointingscan:
 
         self.charge_array = []
 
-
         for idx in tqdm(range(0, len(self.files_list))):
             print(idx)
             ebeam_anaylsis = pointing.pointing_analysis(filename=self.files_list[idx],
                                                         rescale=self.rescale,
-                                                        image_calib=self.camera_calib, # mm/px
-                                                        d_target_screen=self.d_target_screen) # meters
+                                                        image_calib=self.camera_calib,  # mm/px
+                                                        d_target_screen=self.d_target_screen)  # meters
 
             ebeam_anaylsis.crop_image(left=self.im_left,
                                       right=self.im_right,
@@ -104,30 +138,30 @@ class pointingscan:
                                       verbose=False)
 
             ebeam_anaylsis.calculate_pointing_parameters(init_guess=self.fit_p0,
-                                                        output=False,
-                                                        verbose=False)
+                                                         output=False,
+                                                         verbose=False)
 
-            #ebeam_anaylsis.getDivergence(verbose=False)
+            # ebeam_anaylsis.getDivergence(verbose=False)
 
             ebeam_anaylsis.calculate_charge(screen_yield=self.screen_yield,
-                                        camera_calib=self.camera_calib,
-                                        transmission_loss=self.transmission_loss,
-                                        lens_focal_length=self.lens_focal_length,
-                                        lens_fnumber=self.lens_fnumber,
-                                        dist_cam_screen=self.dist_cam_screen,
-                                        verbose=False)
+                                            camera_calib=self.camera_calib,
+                                            transmission_loss=self.transmission_loss,
+                                            lens_focal_length=self.lens_focal_length,
+                                            lens_fnumber=self.lens_fnumber,
+                                            dist_cam_screen=self.dist_cam_screen,
+                                            verbose=False)
 
-            #if self.filename_save is not None:
+            # if self.filename_save is not None:
             fname = self.filename_save + str(idx) + ".png"
             ebeam_anaylsis.plot_fields_fit(save_file=fname,
-                                            xlim=self.im_xlim, ylim=self.im_ylim,
-                                            clim=self.im_clim, cmap='magma')
+                                           xlim=self.im_xlim, ylim=self.im_ylim,
+                                           clim=self.im_clim, cmap='magma')
 
             self.rms_div_major_mrad.append(ebeam_anaylsis.div_major_rms * 1e3)
             self.rms_div_minor_mrad.append(ebeam_anaylsis.div_minor_rms * 1e3)
 
             self.fwhm_div_major_mrad.append(ebeam_anaylsis.div_major_fwhm * 1e3)
-            self.fwhm_div_minor_mrad.append(ebeam_anaylsis.div_minor_fwhm  * 1e3)
+            self.fwhm_div_minor_mrad.append(ebeam_anaylsis.div_minor_fwhm * 1e3)
 
             self.charge_array.append(ebeam_anaylsis.beam_charge_PC)
 
@@ -143,9 +177,9 @@ class pointingscan:
         print("Results from the analysis....\n")
         print("FWHM values:")
         print("FWHM divergence major = (%.5f +- %.5f) mrad" % (np.mean(self.fwhm_div_major_mrad),
-                                                              np.std(self.fwhm_div_major_mrad)))
+                                                               np.std(self.fwhm_div_major_mrad)))
         print("FWHM divergence minor = (%.5f +- %.5f) mrad" % (np.mean(self.fwhm_div_minor_mrad),
-                                                              np.std(self.fwhm_div_minor_mrad)))
+                                                               np.std(self.fwhm_div_minor_mrad)))
 
         print("")
         print("RMS sigma values:")

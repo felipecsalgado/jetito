@@ -1,5 +1,13 @@
 .DS_store
 icons/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv_test2/
+venv_*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

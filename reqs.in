@@ -1,0 +1,14 @@
+numpy
+matplotlib
+scipy
+opencv-python
+pypng
+imageio
+Pillow
+PeakUtils
+scikit-image
+pandas
+natsort
+pymc
+arviz
+tqdm

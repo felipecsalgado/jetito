@@ -45,14 +45,14 @@ for idx in range(0, len(files_list)):
 # Calculate the mean values and std
 print("")
 print("Results from the analysis....")
-mean_fwhm_x = np.mean(fwhm_x)
-std_fwhm_x = np.std(fwhm_x)
+mean_fwhm_x = np.nanmean(fwhm_x)
+std_fwhm_x = np.nanstd(fwhm_x)
 print("X-fwhm = ( %.3f +/- %.3f ) um" % (mean_fwhm_x, std_fwhm_x))
 
-mean_fwhm_y = np.mean(fwhm_y)
-std_fwhm_y = np.std(fwhm_y)
+mean_fwhm_y = np.nanmean(fwhm_y)
+std_fwhm_y = np.nanstd(fwhm_y)
 print("Y-fwhm = ( %.3f +/- %.3f ) um" % (mean_fwhm_y, std_fwhm_y))
 
-mean_q_sigma = np.mean(q_factor_percentage)
-std_q_sigma = np.std(q_factor_percentage)
+mean_q_sigma = np.nanmean(q_factor_percentage)
+std_q_sigma = np.nanstd(q_factor_percentage)
 print("Q-factor = ( %.3f +/- %.3f ) %%" % (mean_q_sigma, std_q_sigma))

@@ -32,16 +32,16 @@ class pp_emittance_calculator:
 
     def __init__(self, filename, image_calib=18.5e-3, d_target_screen=1.45, d_pp_screen=1.269):
         """
-        Contructor of the pointing_analysis class.
+        Constructor of the pp_emittance_calculator class.
 
         Args:
             filename (string): Path and file name of the pepper-pot image to be analyzed.
-            image_calib (double, optional): Calibration of the near-field image in units
-            of length/pixel (typical: mm/pixels). Defaults to 18.5e-3.
-            d_target_screen (double, optional): Distance from the target to the screen
-            where the pointing image was recorded (typical: meters). Defaults to 1.45.
-            d_pp_screen (double, optional): Distance from the pepper-pot to the screen.
-            (typical: meters). Defaults to 1.296.
+            image_calib (float, optional): Calibration of the image in units
+                of length/pixel (typical: mm/pixels). Defaults to 18.5e-3.
+            d_target_screen (float, optional): Distance from the target to the screen
+                where the image was recorded (typical: meters). Defaults to 1.45.
+            d_pp_screen (float, optional): Distance from the pepper-pot to the screen.
+                (typical: meters). Defaults to 1.269.
         """
 
         self.file = filename
@@ -72,8 +72,9 @@ class pp_emittance_calculator:
             bottom (int, optional): Pixel position for starting cropping the image from the
             bottom. Defaults to 1965.
             save_file (string, optional): Path of the file to save the cropped focus.
-            Please provide this path. Defaults to None.
-            axis (str, optional): Axis to perform the integration of the pepper pot signal. Defaults to 'xaxis'.
+                Please provide this path. Defaults to None.
+            axis (str, optional): Axis to perform the integration of the pepper pot signal.
+                Defaults to 'xaxis'.
         """
 
         if 'verbose' not in kwargs:
@@ -128,11 +129,15 @@ class pp_emittance_calculator:
             distance (int, optional): Distance between peaks of the pepper pot signal. Defaults to 40.
             height (int, optional): Height threshold for finding the peaks of the pepper pot signal. Defaults to 300.
             del_peaks (tuple, optional): Tuple of indexes of the peaks to delete from the pepper pot signal.
-            Defaults to None.
+                Defaults to None.
+            disk_r (int, optional): Radius of the disk for median filtering. If not provided, no filtering is applied.
+            baseline_deg (int, optional): Degree of the polynomial for baseline calculation. If not provided, no baseline subtraction.
+            savgol_deg (int, optional): Window size for Savitzky-Golay filtering. If not provided, no smoothing is applied.
+            verbose (bool, optional): Whether to print progress information. Defaults to False.
 
         Raises:
-            TypeError: Raise in case the axis parameter of the function is not a string.
-            Exception: Raised in case the wrong axis is chosen for the signal integration.
+            TypeError: Raised if the axis parameter of the function is not a string.
+            Exception: Raised if the wrong axis is chosen for the signal integration.
         """
 
         # Manage the input parameters of the method
@@ -172,6 +177,9 @@ class pp_emittance_calculator:
 
         # Integrate the signal
         self.xintegrated = np.sum(self.filtered[:, 1:-1], axis=0)
+
+        # Create the x-axis (pixel positions)
+        self.xaxis = np.arange(len(self.xintegrated))
 
         # Apply the SavGol filter
         if savgol_deg != -1:

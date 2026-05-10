@@ -4,6 +4,26 @@ from scipy.optimize import curve_fit
 
 # Packages to calculate the far-field
 def twoD_Gaussian(x_tuple, amplitude, xo, yo, sigma_x, sigma_y, theta, offset):
+    """
+    Two-dimensional Gaussian function for curve fitting.
+
+    This function implements a 2D Gaussian distribution used for fitting
+    intensity profiles in images. The function is designed to work with
+    scipy.optimize.curve_fit.
+
+    Args:
+        x_tuple (tuple): Tuple of (x, y) coordinates as 2D arrays.
+        amplitude (float): Amplitude of the Gaussian peak.
+        xo (float): x-coordinate of the Gaussian center.
+        yo (float): y-coordinate of the Gaussian center.
+        sigma_x (float): Standard deviation in x-direction.
+        sigma_y (float): Standard deviation in y-direction.
+        theta (float): Rotation angle of the Gaussian in radians.
+        offset (float): Constant offset/background level.
+
+    Returns:
+        ndarray: Flattened array of Gaussian values for curve fitting.
+    """
     x, y = x_tuple
     xo = float(xo)
     yo = float(yo)

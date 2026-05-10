@@ -34,16 +34,16 @@ class focusspot_analysis:
 
     def __init__(self, filename, image_calib=0.4, beam_energy=1.7, pulse_duration=30e-15,
                  **kwargs):
-        """Contructor of the focusspot_analysis class.
+        """Constructor of the focusspot_analysis class.
 
         Args:
-            filename (string): Path and file name of the near-field image to calculate
-            the far-field distribution.
-            image_calib (double, optional): Calibration of the near-field image in units
-            of length/pixel (typical: um/pixels). Defaults to 0.4.
-            beam_energy (double, optional): energy contained in the focused beam in Joules.
-            Calibrated using power meter in the chamber (valid for jeti). Default = 1.7 J.
-            pulse_duration (double, optional): pulse duration of the laser pulse in seconds.
+            filename (string): Path and file name of the focus spot image to be analyzed.
+            image_calib (float, optional): Calibration of the image in units
+                of length/pixel (typical: um/pixels). Defaults to 0.4.
+            beam_energy (float, optional): Energy contained in the focused beam in Joules.
+                Calibrated using power meter in the chamber. Default = 1.7 J.
+            pulse_duration (float, optional): Pulse duration of the laser pulse in seconds.
+                Default = 30e-15 s.
         """
 
         if 'verbose' not in kwargs:
@@ -115,8 +115,10 @@ class focusspot_analysis:
 
         Args:
             init_guess (tuple, optional): Initial guess parameter for the fit
-            function. (amplitude, sigma_x, sigma_y, theta, offset).
-            Defaults to (100, 10, 10, 0, 0).
+                function. (amplitude, sigma_x, sigma_y, theta, offset).
+                Defaults to (100, 10, 10, 0, 0).
+            output (bool, optional): Whether to print detailed fit results. Defaults to False.
+            verbose (bool, optional): Whether to print progress information. Defaults to False.
 
         Returns:
             tuple: popt and pcov of the 2D-Gaussian fit
@@ -145,22 +147,22 @@ class focusspot_analysis:
         try:
             # Get the max for initial guess
             sum_vertical = np.sum(self.image_crop, axis=0)
-            idx_max_vertical = np.argmax(sum_vertical)
+            idx_max_x = np.argmax(sum_vertical)
 
             sum_horizontal = np.sum(self.image_crop, axis=1)
-            idx_max_horizontal = np.argmax(sum_horizontal)
+            idx_max_y = np.argmax(sum_horizontal)
 
             # plt.pcolormesh(self.XX, self.YY, self.image_crop)
             # plt.colorbar()
             # plt.savefig("results/focus_analysis/cropped.png", forecolor="white")
 
             if verbose:
-                print("Maximum at: x = %.3f um and y = %.3f um" % (self.XX[idx_max_horizontal,
-                                                                           idx_max_vertical],
-                                                                   self.YY[idx_max_horizontal,
-                                                                           idx_max_vertical]))
+                print("Maximum at: x = %.3f um and y = %.3f um" % (self.XX[idx_max_y,
+                                                                           idx_max_x],
+                                                                   self.YY[idx_max_y,
+                                                                           idx_max_x]))
             # Get the centerr by fitting a 2D Gaussian
-            # initial_guess = (25e3,idx_max_vertical,idx_max_horizontal,20,20,0,0, 0)
+            # initial_guess = (25e3,idx_max_y,idx_max_x,20,20,0,0, 0)
             # amplitude, xo, yo, sigma_x, sigma_y, theta, offset
 
             if verbose:
@@ -171,10 +173,10 @@ class focusspot_analysis:
                                                     YY=self.YY,
                                                     ZZ=self.image_crop,
                                                     initial_guess=(init_guess[0],
-                                                                   self.XX[idx_max_horizontal,
-                                                                           idx_max_vertical],
-                                                                   self.YY[idx_max_horizontal,
-                                                                           idx_max_vertical],
+                                                                   self.XX[idx_max_y,
+                                                                           idx_max_x],
+                                                                   self.YY[idx_max_y,
+                                                                           idx_max_x],
                                                                    init_guess[1],
                                                                    init_guess[2],
                                                                    init_guess[3],
@@ -197,10 +199,16 @@ class focusspot_analysis:
             self.major_sigma = self.major_fwhm / 2.35
             self.minor_sigma = self.minor_fwhm / 2.35
 
-        except (RuntimeError, TypeError, NameError):
-            print("Error while calculating the focus parameters")
-            self.popt_fit = -1
-            self.pcov_fit = -1
+        except Exception as e:
+            print(f"Error while calculating the focus parameters: {e}")
+            self.popt_fit = np.full(7, np.nan)
+            self.pcov_fit = None
+            self.fwhm_x = np.nan
+            self.fwhm_y = np.nan
+            self.major_fwhm = np.nan
+            self.minor_fwhm = np.nan
+            self.major_sigma = np.nan
+            self.minor_sigma = np.nan
 
         return self.popt_fit, self.pcov_fit
 
@@ -215,19 +223,25 @@ class focusspot_analysis:
             verbose = kwargs['verbose']
             kwargs.pop('verbose', None)
 
+        if not hasattr(self, 'popt_fit') or self.popt_fit is None or np.any(np.isnan(self.popt_fit)):
+            self.q_factor = np.nan
+            if verbose:
+                print("Skipping q-factor calculation due to failed focus parameters fit.")
+            return self.q_factor
+
         self.image_crop = np.double(self.image_crop)
         self.image_crop -= 500
         self.image_crop[self.image_crop < 0] = 0
         idx_q_factor = np.argwhere(self.image_crop > (self.popt_fit[0]/2))
-        #idx_q_factor = np.argwhere(self.image_crop > (np.max(self.image_crop)*0.37))
-        q_factor_list = [self.image_crop[idx_q_factor[i][0],idx_q_factor[i][1]] for i in range(idx_q_factor.shape[0])]
+        # idx_q_factor = np.argwhere(self.image_crop > (np.max(self.image_crop)*0.37))
+        q_factor_list = [self.image_crop[idx_q_factor[i][0], idx_q_factor[i][1]] for i in range(idx_q_factor.shape[0])]
 
-        #plt.imshow(self.image_crop[idx_q_factor])
-        #plt.show()
+        # plt.imshow(self.image_crop[idx_q_factor])
+        # plt.show()
 
-        #from PIL import Image
-        #im = Image.fromarray(self.image_crop)
-        #im.save("your_file.tiff")
+        # from PIL import Image
+        # im = Image.fromarray(self.image_crop)
+        # im.save("your_file.tiff")
 
         self.counts_within_FWHM = np.sum(q_factor_list)
 
@@ -249,10 +263,14 @@ class focusspot_analysis:
         Calculates the Intensity in W/cm2 based on the FWHM and energy of the beam.
         Only possible if the FWHM and focus parameters were calculated alredy.
         """
-        if self.counts_within_FWHM is None:
+        if not hasattr(self, 'counts_within_FWHM') or self.counts_within_FWHM is None:
             print("Error in calculating the Intensity!")
             print("Please run calculate_focus_parameters and getQfactor methods before!")
             return -1
+        if np.isnan(self.major_fwhm) or np.isnan(self.minor_fwhm):
+            print("Skipping Intensity calculation due to failed focus fit.")
+            self.intensity = np.nan
+            return np.nan
         else:
             # calculate the energy per pixel
             energy_per_pixel = self.beam_energy / self.total_counts
@@ -282,6 +300,11 @@ class focusspot_analysis:
             Defaults to True.
         """
 
+        if not hasattr(self, 'popt_fit') or self.popt_fit is None or np.any(np.isnan(self.popt_fit)):
+            if show_plot:
+                print("Skipping plot fields fit due to failed focus parameters fit.")
+            return
+
         # Manage *kwargs
         if 'cmap' not in kwargs:
             kwargs['cmap'] = 'coolwarm'
@@ -292,9 +315,7 @@ class focusspot_analysis:
         ax = next(axes)
         im = ax.pcolormesh(self.XX, self.YY, self.image_crop, **kwargs)
 
-        Z_FWHM = gf.twoD_Gaussian((self.popt_fit[1] + self.popt_fit[3]*1.355/2.,
-                                   self.popt_fit[2] + self.popt_fit[4]*1.355/2.),
-                                  *self.popt_fit)
+        Z_FWHM = (self.popt_fit[0] / 2.0) + self.popt_fit[-1]
         # print(Z_FWHM)
 
         data_fitted = gf.twoD_Gaussian((self.XX, self.YY), *self.popt_fit)
@@ -303,22 +324,26 @@ class focusspot_analysis:
                    data_fitted.reshape(self.image_crop.shape[0], self.image_crop.shape[1]),
                    levels=[Z_FWHM], colors=['black'])
 
-        text_legend = ("$\sigma_x$ = %.1f \u03BCm\n" +
-                       "$2\sigma_x$ = %.1f \u03BCm\n" +
-                       "FWHM$_x$ = %.1f \u03BCm\n") % (self.popt_fit[3],
-                                                       2*self.popt_fit[3],
-                                                       2.35*self.popt_fit[3])
+        text_legend = (r"$\sigma_x$ = %.1f \u03BCm\n" +
+                       r"$2\sigma_x$ = %.1f \u03BCm\n" +
+                       r"FWHM$_x$ = %.1f \u03BCm\n") % (
+            self.popt_fit[3],
+            2 * self.popt_fit[3],
+            2.35 * self.popt_fit[3]
+        )
         _ = ax.text(0.07, 0.135, text_legend, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center',
                     transform=ax.transAxes)
 
-        text_legend2 = ("$\sigma_y$ = %.1f \u03BCm\n" +
-                        "$2\sigma_y$ = %.1f \u03BCm\n" +
-                        "FWHM$_y$ = %.1f \u03BCm\n" +
-                        "q-factor = %.1f %%") % (self.popt_fit[4],
-                                                 2*self.popt_fit[4],
-                                                 2.35*self.popt_fit[4],
-                                                 self.q_factor)
+        text_legend2 = (r"$\sigma_y$ = %.1f \u03BCm\n" +
+                        r"$2\sigma_y$ = %.1f \u03BCm\n" +
+                        r"FWHM$_y$ = %.1f \u03BCm\n" +
+                        r"q-factor = %.1f %%") % (
+            self.popt_fit[4],
+            2 * self.popt_fit[4],
+            2.35 * self.popt_fit[4],
+            self.q_factor
+        )
         _ = ax.text(0.55, 0.135, text_legend2, horizontalalignment='left', color='white',
                     fontsize=10, weight='bold', verticalalignment='center', transform=ax.transAxes)
 
